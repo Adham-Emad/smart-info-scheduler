@@ -6,6 +6,7 @@
     <title>Smart-Info | Back Office Scheduler</title>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     
     <style>
         :root {
@@ -23,61 +24,37 @@
         * { box-sizing: border-box; font-family: 'Cairo', sans-serif; margin: 0; padding: 0; transition: all 0.3s ease; }
         body { background-color: var(--bg); color: var(--text); display: flex; min-height: 100vh; overflow-x: hidden; }
 
-        /* === Sidebar Styles === */
+        /* Sidebar */
         .sidebar {
             width: 250px; background: linear-gradient(180deg, var(--primary) 0%, var(--secondary) 100%);
             color: white; padding: 20px; box-shadow: 2px 0 10px rgba(0,0,0,0.1);
             position: fixed; height: 100%; right: 0; z-index: 1000;
             transition: transform 0.3s ease-in-out;
         }
-        
         .logo { font-size: 24px; font-weight: bold; text-align: center; margin-bottom: 40px; padding-bottom: 20px; border-bottom: 1px solid rgba(255,255,255,0.2); }
         .nav-item { padding: 15px; margin-bottom: 10px; cursor: pointer; border-radius: 10px; display: flex; align-items: center; gap: 10px; font-size: 16px; }
         .nav-item:hover, .nav-item.active { background: rgba(255,255,255,0.2); transform: translateX(-5px); }
 
-        /* === Main Content === */
-        .main-content { 
-            margin-right: 250px; /* Space for sidebar on desktop */
-            width: calc(100% - 250px); 
-            padding: 30px; 
-            transition: all 0.3s ease;
-        }
+        /* Content */
+        .main-content { margin-right: 250px; width: calc(100% - 250px); padding: 30px; transition: all 0.3s ease; }
 
-        /* === Mobile Responsive Logic === */
-        .menu-toggle { display: none; } /* Hidden on desktop */
+        /* Mobile */
+        .menu-toggle { display: none; }
         .overlay { display: none; }
 
         @media (max-width: 768px) {
-            /* Sidebar hidden by default on mobile */
             .sidebar { transform: translateX(100%); right: 0; } 
-            .sidebar.active { transform: translateX(0); } /* Slide in */
-            
-            /* Main content takes full width */
+            .sidebar.active { transform: translateX(0); }
             .main-content { margin-right: 0; width: 100%; padding: 15px; padding-top: 60px; }
-            
-            /* Hamburger Menu Button */
-            .menu-toggle {
-                display: block; position: fixed; top: 15px; right: 15px; z-index: 1100;
-                background: var(--primary); color: white; border: none; padding: 10px 15px;
-                border-radius: 8px; font-size: 20px; cursor: pointer; box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-            }
-
-            /* Overlay background when sidebar is open */
-            .overlay {
-                position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-                background: rgba(0,0,0,0.5); z-index: 900;
-                display: none;
-            }
+            .menu-toggle { display: block; position: fixed; top: 15px; right: 15px; z-index: 1100; background: var(--primary); color: white; border: none; padding: 10px 15px; border-radius: 8px; font-size: 20px; cursor: pointer; box-shadow: 0 2px 5px rgba(0,0,0,0.2); }
+            .overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 900; display: none; }
             .overlay.active { display: block; }
-            
-            /* Adjust table font size */
             table { font-size: 12px; }
             th, td { padding: 8px 5px; }
         }
 
-        /* === UI Elements === */
+        /* UI */
         .header-section { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; flex-wrap: wrap; gap: 10px; }
-        
         .btn-main { background: var(--primary); color: white; border: none; padding: 10px 20px; border-radius: 8px; cursor: pointer; font-size: 16px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
         .btn-main:hover { background: var(--secondary); transform: translateY(-2px); }
         
@@ -100,7 +77,7 @@
         .btn-edit:hover { background: var(--secondary); }
 
         .schedule-container { background: white; padding: 20px; border-radius: 15px; overflow-x: auto; display: none; }
-        table { width: 100%; border-collapse: collapse; min-width: 800px; } /* Min width ensures scrolling on mobile */
+        table { width: 100%; border-collapse: collapse; min-width: 800px; }
         th, td { padding: 12px 10px; text-align: center; border-bottom: 1px solid #eee; white-space: nowrap; }
         th { background-color: var(--primary); color: white; }
         .off-cell { background-color: var(--off-day); color: var(--off-text); font-weight: bold; border-radius: 5px; }
@@ -120,10 +97,7 @@
 </head>
 <body>
 
-    <button class="menu-toggle" onclick="toggleSidebar()">
-        <i class="fas fa-bars"></i>
-    </button>
-    
+    <button class="menu-toggle" onclick="toggleSidebar()"><i class="fas fa-bars"></i></button>
     <div class="overlay" onclick="toggleSidebar()"></div>
 
     <div class="sidebar">
@@ -156,14 +130,15 @@
         <div id="schedule-section" class="schedule-container animate">
             <div class="header-section">
                 <h2><i class="fas fa-calendar-alt"></i> جدول الشفتات</h2>
-                <div><button class="btn-success" onclick="exportFullScheduleEn()"><i class="fas fa-file-excel"></i> تحميل الجدول إنجليزي</button></div>
+                <div><button class="btn-success" onclick="exportToRealExcel()"><i class="fas fa-file-excel"></i> تحميل الجدول (Excel الأصلي)</button></div>
             </div>
             <div style="display:flex; justify-content:center; align-items:center; margin-bottom:15px; gap:5px; flex-wrap: wrap;">
                 <button class="btn-nav" onclick="changeWeek(-1)"><i class="fas fa-chevron-right"></i> السابق</button>
                 <span id="currentWeekLabel" style="font-weight: bold; background: #e9ecef; padding: 5px 15px; border-radius: 20px; font-size: 13px;">الأسبوع الحالي</span>
                 <button class="btn-nav" onclick="changeWeek(1)">التالي <i class="fas fa-chevron-left"></i></button>
             </div>
-            <div style="overflow-x: auto;"> <table id="scheduleTable"><thead id="tableHead"></thead><tbody id="tableBody"></tbody></table>
+            <div style="overflow-x: auto;">
+                <table id="scheduleTable"><thead id="tableHead"></thead><tbody id="tableBody"></tbody></table>
             </div>
         </div>
 
@@ -183,19 +158,10 @@
     </div>
 
     <script>
-        // === Responsive Sidebar Logic ===
-        function toggleSidebar() {
-            document.querySelector('.sidebar').classList.toggle('active');
-            document.querySelector('.overlay').classList.toggle('active');
-        }
-        function toggleSidebarOnMobile() {
-            // Close sidebar automatically when clicking an item on mobile
-            if (window.innerWidth <= 768) {
-                toggleSidebar();
-            }
-        }
+        // === Core Functions & Data ===
+        function toggleSidebar() { document.querySelector('.sidebar').classList.toggle('active'); document.querySelector('.overlay').classList.toggle('active'); }
+        function toggleSidebarOnMobile() { if (window.innerWidth <= 768) { toggleSidebar(); } }
 
-        // === Data & Config ===
         const BASE_DATE = new Date('2026-01-10T00:00:00'); 
         let currentWeekOffset = 0; 
         const employeesDefault = [
@@ -223,21 +189,19 @@
 
         function isDayOff(empBaseOffset, daysSinceBase) {
             const n = daysSinceBase - empBaseOffset;
-            const m = 8; 
-            const rem = ((n % m) + m) % m;
+            const m = 8; const rem = ((n % m) + m) % m;
             return rem === 0 || rem === 1;
         }
 
         function renderTeam() {
-            const grid = document.getElementById('teamGrid');
-            grid.innerHTML = '';
+            const grid = document.getElementById('teamGrid'); grid.innerHTML = '';
             employees.forEach(emp => {
                 let imgSrc = emp.photo || (emp.gender === 'male' ? maleAvatar : femaleAvatar);
                 grid.innerHTML += `
                     <div class="employee-card">
                         <div class="card-actions">
-                            <button class="action-btn btn-del" onclick="deleteEmployee(${emp.id})" title="حذف"><i class="fas fa-trash"></i></button>
-                            <button class="action-btn btn-edit" onclick="editEmployee(${emp.id})" title="تعديل"><i class="fas fa-pen"></i></button>
+                            <button class="action-btn btn-del" onclick="deleteEmployee(${emp.id})"><i class="fas fa-trash"></i></button>
+                            <button class="action-btn btn-edit" onclick="editEmployee(${emp.id})"><i class="fas fa-pen"></i></button>
                         </div>
                         <img src="${imgSrc}" class="avatar" onclick="openEmpModal(${emp.id})">
                         <div class="emp-name">${emp.name}</div>
@@ -248,21 +212,15 @@
 
         function resetForm() {
             document.getElementById('formTitle').innerText = "إضافة موظف جديد";
-            document.getElementById('editEmpId').value = "";
-            document.getElementById('empName').value = "";
-            document.getElementById('empGender').value = "male";
-            document.getElementById('empStartDate').value = "";
+            document.getElementById('editEmpId').value = ""; document.getElementById('empName').value = "";
+            document.getElementById('empGender').value = "male"; document.getElementById('empStartDate').value = "";
             document.getElementById('empPhotoFile').value = "";
         }
         function editEmployee(id) {
-            const emp = employees.find(e => e.id === id);
-            if (!emp) return;
-            resetForm();
-            document.getElementById('formTitle').innerText = "تعديل بيانات الموظف";
-            document.getElementById('editEmpId').value = emp.id;
-            document.getElementById('empName').value = emp.name;
-            document.getElementById('empGender').value = emp.gender;
-            showSection('add-emp');
+            const emp = employees.find(e => e.id === id); if (!emp) return;
+            resetForm(); document.getElementById('formTitle').innerText = "تعديل بيانات الموظف";
+            document.getElementById('editEmpId').value = emp.id; document.getElementById('empName').value = emp.name;
+            document.getElementById('empGender').value = emp.gender; showSection('add-emp');
         }
         function saveEmployee() {
             const id = document.getElementById('editEmpId').value;
@@ -274,72 +232,56 @@
 
             const processSave = (photoData) => {
                 if (id) {
-                    const empIndex = employees.findIndex(e => e.id == id);
-                    if (empIndex > -1) {
-                        employees[empIndex].name = name;
-                        employees[empIndex].gender = gender;
-                        if (photoData) employees[empIndex].photo = photoData;
+                    const idx = employees.findIndex(e => e.id == id);
+                    if (idx > -1) {
+                        employees[idx].name = name; employees[idx].gender = gender;
+                        if (photoData) employees[idx].photo = photoData;
                         if (startDateStr) {
                             const startObj = new Date(startDateStr);
-                            const timeDiff = startObj - BASE_DATE;
-                            employees[empIndex].baseOffset = Math.ceil(timeDiff / 86400000) + 5;
+                            employees[idx].baseOffset = Math.ceil((startObj - BASE_DATE) / 86400000) + 5;
                         }
                     }
-                    alert("تم حفظ التعديلات");
+                    alert("تم الحفظ");
                 } else {
                     if (!startDateStr) return alert("يرجى إدخال تاريخ البدء");
                     const startObj = new Date(startDateStr);
-                    const timeDiff = startObj - BASE_DATE;
-                    employees.push({ id: Date.now(), name, gender, photo: photoData, baseOffset: Math.ceil(timeDiff / 86400000) + 5 });
+                    employees.push({ id: Date.now(), name, gender, photo: photoData, baseOffset: Math.ceil((startObj - BASE_DATE) / 86400000) + 5 });
                     alert("تم الإضافة");
                 }
                 saveData(); resetForm(); showSection('team'); renderTeam();
             };
             if (fileInput.files && fileInput.files[0]) {
-                const reader = new FileReader();
-                reader.onload = function(e) { processSave(e.target.result); };
-                reader.readAsDataURL(fileInput.files[0]);
+                const reader = new FileReader(); reader.onload = e => processSave(e.target.result); reader.readAsDataURL(fileInput.files[0]);
             } else { processSave(''); }
         }
-        function deleteEmployee(id) {
-            if(confirm("حذف الموظف؟")) { employees = employees.filter(e => e.id !== id); saveData(); renderTeam(); renderSchedule(); }
-        }
-
-        function changeWeek(direction) { currentWeekOffset += direction; renderSchedule(); }
+        function deleteEmployee(id) { if(confirm("حذف؟")) { employees = employees.filter(e => e.id !== id); saveData(); renderTeam(); renderSchedule(); } }
+        function changeWeek(d) { currentWeekOffset += d; renderSchedule(); }
 
         function getScheduleDataForOffset(offset) {
-            let weekStart = new Date(BASE_DATE);
-            weekStart.setDate(weekStart.getDate() + (offset * 7));
+            let weekStart = new Date(BASE_DATE); weekStart.setDate(weekStart.getDate() + (offset * 7));
             const dayNames = ["السبت", "الأحد", "الاثنين", "الثلاثاء", "الأربعاء", "الخميس", "الجمعة"];
-            let headers = [];
-            let currentDayDate = new Date(weekStart);
+            let headers = [], rows = [];
             for(let i=0; i<7; i++) {
-                let dateStr = currentDayDate.toLocaleDateString('ar-EG', {day:'numeric', month:'numeric'});
-                headers.push(`${dayNames[i]} ${dateStr}`);
-                currentDayDate.setDate(currentDayDate.getDate() + 1);
+                let d = new Date(weekStart); d.setDate(d.getDate() + i);
+                headers.push(`${dayNames[i]} ${d.toLocaleDateString('ar-EG', {day:'numeric', month:'numeric'})}`);
             }
-            let rows = [];
             employees.forEach((emp, index) => {
                 let rowData = { name: emp.name, cells: [] };
-                let weekStatus = [];
-                let workIndices = [];
+                let weekStatus = [], workIndices = [];
                 for(let i=0; i<7; i++) {
                     let isOff = isDayOff(emp.baseOffset, (offset * 7) + i);
                     weekStatus.push({ isOff: isOff, time: "" });
-                    if(!isOff && i < 6) workIndices.push(i); 
+                    if(!isOff && i < 6) workIndices.push(i);
                 }
                 let isFridayOff = weekStatus[6].isOff;
                 if(!isFridayOff) weekStatus[6].time = "13:00";
                 
-                let pattern = [];
-                let isGroupA = (index % 2 === 0); 
+                let pattern = [], isGroupA = (index % 2 === 0);
                 if (!isFridayOff) {
-                    if(isGroupA) pattern = ["9:00", "9:00", "10:00", "10:00"];
-                    else         pattern = ["10:00", "10:00", "9:00", "9:00"];
+                    if(isGroupA) pattern = ["9:00", "9:00", "10:00", "10:00"]; else pattern = ["10:00", "10:00", "9:00", "9:00"];
                     while(pattern.length < workIndices.length) pattern.push("9:00");
                 } else {
-                    if(isGroupA) pattern = ["10:00", "10:00", "10:00", "9:00", "9:00"];
-                    else         pattern = ["9:00", "9:00", "10:00", "10:00", "10:00"];
+                    if(isGroupA) pattern = ["10:00", "10:00", "10:00", "9:00", "9:00"]; else pattern = ["9:00", "9:00", "10:00", "10:00", "10:00"];
                     while(pattern.length < workIndices.length) pattern.push("10:00");
                 }
                 workIndices.forEach((dayIdx, i) => { if(pattern[i]) weekStatus[dayIdx].time = pattern[i]; });
@@ -364,30 +306,60 @@
             });
         }
 
-        function exportFullScheduleEn() {
+        // === REAL EXCEL EXPORT USING SHEETJS ===
+        function exportToRealExcel() {
             const nameMap = { 'كريم': 'Kareem', 'هنا': 'Hana', 'ندى': 'Nada', 'نهلة': 'Nahla', 'سلمى': 'Salma', 'شهد': 'Shahd' };
-            let tableContent = `<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel" xmlns="http://www.w3.org/TR/REC-html40"><head><meta charset="UTF-8"><style>body { direction: ltr; font-family: Calibri, sans-serif; } table { border-collapse: collapse; width: 100%; margin-bottom: 20px; } td, th { border: 1px solid #000; text-align: center; padding: 5px; } th { background-color: #4472C4; color: white; } .off { background-color: #FF9999; color: #9C0006; font-weight: bold; } .name { background-color: #EDEDED; font-weight: bold; text-align: left; } .week-header { background-color: #D9E1F2; font-weight: bold; font-size: 14px; text-align: left; padding: 10px; }</style></head><body>`;
             const engDays = ["Saturday", "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday"];
+            
+            // Create a Master Array for the Sheet
+            let ws_data = [];
+
+            // Add Title
+            ws_data.push(["Smart-Info Back Office Schedule"]);
+            ws_data.push([]); // Empty row
+
+            // Loop 12 weeks
             for (let w = 0; w < 12; w++) {
                 const data = getScheduleDataForOffset(w);
                 const options = { month: 'long', day: 'numeric', year: 'numeric' };
                 let weekEnd = new Date(data.weekStart); weekEnd.setDate(weekEnd.getDate() + 6);
                 let range = `${data.weekStart.toLocaleDateString('en-GB', options)} - ${weekEnd.toLocaleDateString('en-GB', options)}`;
-                tableContent += `<table><tr><td colspan="8" class="week-header">Week ${w + 1}: ${range}</td></tr><tr><th>Employee</th>`;
-                let currentDayDate = new Date(data.weekStart);
-                for(let i=0; i<7; i++) { let dateStr = currentDayDate.toLocaleDateString('en-GB', {day:'numeric', month:'short'}); tableContent += `<th>${engDays[i]} <br> ${dateStr}</th>`; currentDayDate.setDate(currentDayDate.getDate() + 1); }
-                tableContent += `</tr>`;
+
+                // Week Header Row
+                ws_data.push([`Week ${w + 1}: ${range}`]);
+                
+                // Column Headers Row
+                let colHeaders = ["Employee"];
+                for(let i=0; i<7; i++) {
+                    let d = new Date(data.weekStart); d.setDate(d.getDate() + i);
+                    colHeaders.push(`${engDays[i]} (${d.getDate()}/${d.getMonth()+1})`);
+                }
+                ws_data.push(colHeaders);
+
+                // Data Rows
                 data.rows.forEach(row => {
                     let engName = nameMap[row.name] || row.name;
-                    tableContent += `<tr><td class="name">${engName}</td>`;
-                    row.cells.forEach(cell => { tableContent += cell.isOff ? `<td class="off">Off</td>` : `<td>${cell.text}</td>`; });
-                    tableContent += `</tr>`;
+                    let rowData = [engName];
+                    row.cells.forEach(cell => {
+                        rowData.push(cell.text);
+                    });
+                    ws_data.push(rowData);
                 });
-                tableContent += `</table><br>`;
+
+                ws_data.push([]); // Empty row between weeks
             }
-            tableContent += `</body></html>`;
-            const blob = new Blob([tableContent], { type: 'application/vnd.ms-excel' });
-            const link = document.createElement('a'); link.href = URL.createObjectURL(blob); link.download = 'Smart_Schedule_English.xls'; document.body.appendChild(link); link.click(); document.body.removeChild(link);
+
+            // Create Workbook and Worksheet
+            var wb = XLSX.utils.book_new();
+            var ws = XLSX.utils.aoa_to_sheet(ws_data);
+
+            // Styling tweaks (SheetJS basic doesn't support colors in free version easily, but structure is perfect)
+            // Adjust column width
+            var wscols = [ {wch:15}, {wch:12}, {wch:12}, {wch:12}, {wch:12}, {wch:12}, {wch:12}, {wch:12} ];
+            ws['!cols'] = wscols;
+
+            XLSX.utils.book_append_sheet(wb, ws, "Schedule");
+            XLSX.writeFile(wb, "Smart_Schedule_Full.xlsx");
         }
 
         function openEmpModal(id) {
