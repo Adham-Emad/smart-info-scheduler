@@ -21,19 +21,62 @@
         }
 
         * { box-sizing: border-box; font-family: 'Cairo', sans-serif; margin: 0; padding: 0; transition: all 0.3s ease; }
-        body { background-color: var(--bg); color: var(--text); display: flex; min-height: 100vh; }
+        body { background-color: var(--bg); color: var(--text); display: flex; min-height: 100vh; overflow-x: hidden; }
 
+        /* === Sidebar Styles === */
         .sidebar {
             width: 250px; background: linear-gradient(180deg, var(--primary) 0%, var(--secondary) 100%);
             color: white; padding: 20px; box-shadow: 2px 0 10px rgba(0,0,0,0.1);
-            position: fixed; height: 100%; right: 0; z-index: 100;
+            position: fixed; height: 100%; right: 0; z-index: 1000;
+            transition: transform 0.3s ease-in-out;
         }
+        
         .logo { font-size: 24px; font-weight: bold; text-align: center; margin-bottom: 40px; padding-bottom: 20px; border-bottom: 1px solid rgba(255,255,255,0.2); }
         .nav-item { padding: 15px; margin-bottom: 10px; cursor: pointer; border-radius: 10px; display: flex; align-items: center; gap: 10px; font-size: 16px; }
         .nav-item:hover, .nav-item.active { background: rgba(255,255,255,0.2); transform: translateX(-5px); }
 
-        .main-content { margin-right: 250px; width: calc(100% - 250px); padding: 30px; }
-        .header-section { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; flex-wrap: wrap; gap: 10px;}
+        /* === Main Content === */
+        .main-content { 
+            margin-right: 250px; /* Space for sidebar on desktop */
+            width: calc(100% - 250px); 
+            padding: 30px; 
+            transition: all 0.3s ease;
+        }
+
+        /* === Mobile Responsive Logic === */
+        .menu-toggle { display: none; } /* Hidden on desktop */
+        .overlay { display: none; }
+
+        @media (max-width: 768px) {
+            /* Sidebar hidden by default on mobile */
+            .sidebar { transform: translateX(100%); right: 0; } 
+            .sidebar.active { transform: translateX(0); } /* Slide in */
+            
+            /* Main content takes full width */
+            .main-content { margin-right: 0; width: 100%; padding: 15px; padding-top: 60px; }
+            
+            /* Hamburger Menu Button */
+            .menu-toggle {
+                display: block; position: fixed; top: 15px; right: 15px; z-index: 1100;
+                background: var(--primary); color: white; border: none; padding: 10px 15px;
+                border-radius: 8px; font-size: 20px; cursor: pointer; box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            }
+
+            /* Overlay background when sidebar is open */
+            .overlay {
+                position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+                background: rgba(0,0,0,0.5); z-index: 900;
+                display: none;
+            }
+            .overlay.active { display: block; }
+            
+            /* Adjust table font size */
+            table { font-size: 12px; }
+            th, td { padding: 8px 5px; }
+        }
+
+        /* === UI Elements === */
+        .header-section { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; flex-wrap: wrap; gap: 10px; }
         
         .btn-main { background: var(--primary); color: white; border: none; padding: 10px 20px; border-radius: 8px; cursor: pointer; font-size: 16px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
         .btn-main:hover { background: var(--secondary); transform: translateY(-2px); }
@@ -41,7 +84,7 @@
         .btn-success { background: var(--success); color: white; border: none; padding: 10px 20px; border-radius: 8px; cursor: pointer; font-size: 16px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); text-decoration: none; display: inline-block;}
         .btn-success:hover { background: #218838; transform: translateY(-2px); }
 
-        .btn-nav { background: white; color: var(--primary); border: 1px solid var(--primary); padding: 8px 15px; border-radius: 5px; cursor: pointer; margin: 0 5px; font-weight: bold; }
+        .btn-nav { background: white; color: var(--primary); border: 1px solid var(--primary); padding: 8px 15px; border-radius: 5px; cursor: pointer; margin: 0 5px; font-weight: bold; font-size: 14px; }
         .btn-nav:hover { background: var(--primary); color: white; }
 
         .team-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 20px; }
@@ -57,7 +100,7 @@
         .btn-edit:hover { background: var(--secondary); }
 
         .schedule-container { background: white; padding: 20px; border-radius: 15px; overflow-x: auto; display: none; }
-        table { width: 100%; border-collapse: collapse; min-width: 800px; }
+        table { width: 100%; border-collapse: collapse; min-width: 800px; } /* Min width ensures scrolling on mobile */
         th, td { padding: 12px 10px; text-align: center; border-bottom: 1px solid #eee; white-space: nowrap; }
         th { background-color: var(--primary); color: white; }
         .off-cell { background-color: var(--off-day); color: var(--off-text); font-weight: bold; border-radius: 5px; }
@@ -68,8 +111,8 @@
         .input-group input, .input-group select { width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 8px; font-family: inherit; }
         input[type="file"] { padding: 10px; background: #f8f9fa; }
 
-        .modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); display: none; justify-content: center; align-items: center; z-index: 1000; }
-        .modal-content { background: white; padding: 30px; border-radius: 15px; width: 500px; text-align: center; }
+        .modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); display: none; justify-content: center; align-items: center; z-index: 2000; }
+        .modal-content { background: white; padding: 30px; border-radius: 15px; width: 500px; max-width: 90%; text-align: center; }
 
         @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
         .animate { animation: fadeIn 0.5s ease forwards; }
@@ -77,11 +120,17 @@
 </head>
 <body>
 
+    <button class="menu-toggle" onclick="toggleSidebar()">
+        <i class="fas fa-bars"></i>
+    </button>
+    
+    <div class="overlay" onclick="toggleSidebar()"></div>
+
     <div class="sidebar">
         <div class="logo"><i class="fas fa-calendar-check"></i> Smart-Info</div>
-        <div class="nav-item active" onclick="showSection('team')"><i class="fas fa-users"></i> فريق العمل</div>
-        <div class="nav-item" onclick="showSection('schedule')"><i class="fas fa-table"></i> جدول الشفتات</div>
-        <div class="nav-item" onclick="showSection('add-emp')"><i class="fas fa-user-plus"></i> إضافة موظف</div>
+        <div class="nav-item active" onclick="showSection('team'); toggleSidebarOnMobile();"><i class="fas fa-users"></i> فريق العمل</div>
+        <div class="nav-item" onclick="showSection('schedule'); toggleSidebarOnMobile();"><i class="fas fa-table"></i> جدول الشفتات</div>
+        <div class="nav-item" onclick="showSection('add-emp'); toggleSidebarOnMobile();"><i class="fas fa-user-plus"></i> إضافة موظف</div>
     </div>
 
     <div class="main-content">
@@ -107,14 +156,15 @@
         <div id="schedule-section" class="schedule-container animate">
             <div class="header-section">
                 <h2><i class="fas fa-calendar-alt"></i> جدول الشفتات</h2>
-                <div><button class="btn-success" onclick="exportFullScheduleEn()"><i class="fas fa-file-excel"></i> تحميل الجدول إنجليزي (3 شهور)</button></div>
+                <div><button class="btn-success" onclick="exportFullScheduleEn()"><i class="fas fa-file-excel"></i> تحميل الجدول إنجليزي</button></div>
             </div>
-            <div style="display:flex; justify-content:center; align-items:center; margin-bottom:15px; gap:10px;">
-                <button class="btn-nav" onclick="changeWeek(-1)"><i class="fas fa-chevron-right"></i> الأسبوع السابق</button>
-                <span id="currentWeekLabel" style="font-weight: bold; background: #e9ecef; padding: 5px 15px; border-radius: 20px;">الأسبوع الحالي</span>
-                <button class="btn-nav" onclick="changeWeek(1)">الأسبوع التالي <i class="fas fa-chevron-left"></i></button>
+            <div style="display:flex; justify-content:center; align-items:center; margin-bottom:15px; gap:5px; flex-wrap: wrap;">
+                <button class="btn-nav" onclick="changeWeek(-1)"><i class="fas fa-chevron-right"></i> السابق</button>
+                <span id="currentWeekLabel" style="font-weight: bold; background: #e9ecef; padding: 5px 15px; border-radius: 20px; font-size: 13px;">الأسبوع الحالي</span>
+                <button class="btn-nav" onclick="changeWeek(1)">التالي <i class="fas fa-chevron-left"></i></button>
             </div>
-            <table id="scheduleTable"><thead id="tableHead"></thead><tbody id="tableBody"></tbody></table>
+            <div style="overflow-x: auto;"> <table id="scheduleTable"><thead id="tableHead"></thead><tbody id="tableBody"></tbody></table>
+            </div>
         </div>
 
     </div>
@@ -133,6 +183,19 @@
     </div>
 
     <script>
+        // === Responsive Sidebar Logic ===
+        function toggleSidebar() {
+            document.querySelector('.sidebar').classList.toggle('active');
+            document.querySelector('.overlay').classList.toggle('active');
+        }
+        function toggleSidebarOnMobile() {
+            // Close sidebar automatically when clicking an item on mobile
+            if (window.innerWidth <= 768) {
+                toggleSidebar();
+            }
+        }
+
+        // === Data & Config ===
         const BASE_DATE = new Date('2026-01-10T00:00:00'); 
         let currentWeekOffset = 0; 
         const employeesDefault = [
@@ -258,44 +321,28 @@
             let rows = [];
             employees.forEach((emp, index) => {
                 let rowData = { name: emp.name, cells: [] };
-                
-                // 1. Calculate the whole week's status first
                 let weekStatus = [];
                 let workIndices = [];
                 for(let i=0; i<7; i++) {
                     let isOff = isDayOff(emp.baseOffset, (offset * 7) + i);
                     weekStatus.push({ isOff: isOff, time: "" });
-                    if(!isOff && i < 6) workIndices.push(i); // Count working days Sat-Thu
+                    if(!isOff && i < 6) workIndices.push(i); 
                 }
-
-                // 2. Determine Pattern
                 let isFridayOff = weekStatus[6].isOff;
                 if(!isFridayOff) weekStatus[6].time = "13:00";
                 
                 let pattern = [];
-                let isGroupA = (index % 2 === 0); // Balance shift
-                
+                let isGroupA = (index % 2 === 0); 
                 if (!isFridayOff) {
-                    // Logic: Friday Work -> 4 days remaining. 2 days @ 9, 2 days @ 10.
                     if(isGroupA) pattern = ["9:00", "9:00", "10:00", "10:00"];
                     else         pattern = ["10:00", "10:00", "9:00", "9:00"];
-                    
-                    // Fallback if odd break pattern gives <> 4 days (rare in 8-day cycle)
                     while(pattern.length < workIndices.length) pattern.push("9:00");
                 } else {
-                    // Logic: Friday Off -> 5 days remaining. 3 days @ 10, 2 days @ 9.
                     if(isGroupA) pattern = ["10:00", "10:00", "10:00", "9:00", "9:00"];
                     else         pattern = ["9:00", "9:00", "10:00", "10:00", "10:00"];
-                    
                     while(pattern.length < workIndices.length) pattern.push("10:00");
                 }
-
-                // 3. Assign times to working days sequentially
-                workIndices.forEach((dayIdx, i) => {
-                    if(pattern[i]) weekStatus[dayIdx].time = pattern[i];
-                });
-
-                // 4. Push to cells
+                workIndices.forEach((dayIdx, i) => { if(pattern[i]) weekStatus[dayIdx].time = pattern[i]; });
                 weekStatus.forEach(d => rowData.cells.push({ text: d.isOff ? "Off" : d.time, isOff: d.isOff }));
                 rows.push(rowData);
             });
