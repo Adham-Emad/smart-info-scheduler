@@ -6,7 +6,10 @@
     <title>Smart-Info | Fun & Scheduler</title>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/exceljs/4.3.0/exceljs.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
+    
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
     
     <style>
@@ -89,25 +92,20 @@
         .modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); display: none; justify-content: center; align-items: center; z-index: 2000; }
         .modal-content { background: white; padding: 30px; border-radius: 15px; width: 500px; max-width: 90%; text-align: center; }
 
-        /* ========= FUN ZONE STYLES ========= */
+        /* Fun Zone Styles */
         #fun-section { display: none; }
         .fun-header { text-align: center; background: linear-gradient(135deg, #FF9F43, #ff6b6b); color: white; padding: 30px; border-radius: 15px; margin-bottom: 30px; }
         .fun-quote { font-size: 20px; font-weight: bold; margin-top: 10px; font-style: italic; min-height: 40px;}
-        
         .sound-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(100px, 1fr)); gap: 10px; margin-bottom: 30px; }
         .sound-btn { background: white; border: 2px solid var(--sound-btn); color: var(--sound-btn); padding: 10px; border-radius: 10px; font-weight: bold; cursor: pointer; transition: 0.2s; display: flex; flex-direction: column; align-items: center; gap: 5px; }
         .sound-btn:active { transform: scale(0.95); background: var(--sound-btn); color: white; }
-
         .countdown-container { background: white; padding: 25px; border-radius: 15px; margin-bottom: 30px; text-align: center; border: 2px solid #ddd; }
         .countdown-timer { font-size: 32px; font-weight: bold; color: var(--purple); margin: 15px 0; direction: ltr; }
-        
         .game-area { background: white; padding: 20px; border-radius: 15px; margin-top: 20px; display: none; text-align: center; min-height: 400px; animation: fadeIn 0.5s; }
         .fun-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; }
         .game-card { background: white; border-radius: 15px; padding: 20px; text-align: center; cursor: pointer; transition: 0.3s; border-bottom: 5px solid var(--fun-color); box-shadow: 0 5px 15px rgba(0,0,0,0.05); }
         .game-card:hover { transform: translateY(-5px); box-shadow: 0 10px 20px rgba(0,0,0,0.1); }
         .game-icon { font-size: 40px; color: var(--fun-color); margin-bottom: 10px; }
-
-        /* Game Elements */
         canvas#wheel { width: 300px; height: 300px; margin: 20px auto; display: block; }
         .xo-board { display: grid; grid-template-columns: repeat(3, 80px); gap: 5px; margin: 20px auto; width: 250px; }
         .xo-cell { width: 80px; height: 80px; background: #eee; font-size: 40px; display: flex; align-items: center; justify-content: center; cursor: pointer; font-weight: bold; border-radius: 10px; color: var(--primary);}
@@ -116,12 +114,9 @@
         .memory-card { width: 60px; height: 60px; background: var(--primary); border-radius: 8px; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 24px; color: white; }
         .memory-card.flipped { background: white; border: 2px solid var(--primary); }
         .memory-card.matched { background: var(--success); cursor: default; }
-        
         .scenario-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 15px; margin-bottom: 30px; }
         .scenario-btn { background: white; border: 2px solid var(--purple); color: var(--purple); padding: 15px; border-radius: 10px; font-weight: bold; cursor: pointer; transition: 0.2s; display: flex; align-items: center; justify-content: center; gap: 10px; }
         .scenario-btn:hover { background: var(--purple); color: white; transform: scale(1.05); }
-
-        /* New Footer Style */
         .fun-footer { margin-top: 40px; padding: 20px; background: white; border-radius: 15px; text-align: center; border-top: 5px solid var(--purple); box-shadow: 0 5px 15px rgba(0,0,0,0.05); }
         .vote-buttons { display: flex; justify-content: center; gap: 20px; margin: 15px 0; }
         .btn-vote { padding: 10px 25px; border: none; border-radius: 20px; font-weight: bold; cursor: pointer; font-size: 16px; transition: 0.2s; color: white; }
@@ -170,7 +165,9 @@
         <div id="schedule-section" class="schedule-container animate">
             <div class="header-section">
                 <h2><i class="fas fa-calendar-alt"></i> جدول الشفتات</h2>
-                <div><button class="btn-success" onclick="exportToRealExcel()"><i class="fas fa-file-excel"></i> تحميل الجدول (Excel)</button></div>
+                <div>
+                    <button class="btn-success" onclick="openExportModal()"><i class="fas fa-file-excel"></i> خيارات التحميل</button>
+                </div>
             </div>
             <div style="display:flex; justify-content:center; align-items:center; margin-bottom:15px; gap:5px; flex-wrap: wrap;">
                 <button class="btn-nav" onclick="changeWeek(-1)"><i class="fas fa-chevron-right"></i> السابق</button>
@@ -261,7 +258,6 @@
                 </div>
                 <div id="voteResult" class="vote-result"></div>
             </div>
-
         </div>
 
     </div>
@@ -276,6 +272,32 @@
                 <p id="modalBreak" style="color: var(--secondary); font-weight: bold;"></p>
             </div>
             <button class="btn-main" style="margin-top: 20px; background: #555;" onclick="closeModal()">إغلاق</button>
+        </div>
+    </div>
+
+    <div id="exportModal" class="modal">
+        <div class="modal-content" style="max-width: 450px;">
+            <h2 style="color: var(--success); margin-bottom: 20px;"><i class="fas fa-file-excel"></i> تحميل جدول الشفتات</h2>
+            
+            <div class="input-group">
+                <label>تحميل لـ:</label>
+                <select id="exportTarget">
+                    <option value="all">كل التيم (الجدول الكامل)</option>
+                    </select>
+            </div>
+
+            <div class="input-group">
+                <label>المدة (بداية من الأسبوع الحالي):</label>
+                <select id="exportDuration">
+                    <option value="1">شهر واحد (4 أسابيع)</option>
+                    <option value="2">شهرين (8 أسابيع)</option>
+                    <option value="3" selected>3 شهور (12 أسبوع)</option>
+                    <option value="6">6 شهور (24 أسبوع)</option>
+                </select>
+            </div>
+
+            <button class="btn-main" style="width: 100%; background: var(--success);" onclick="processAdvancedExport()">تحميل الملف</button>
+            <button class="btn-main" style="width: 100%; background: #777; margin-top: 10px;" onclick="document.getElementById('exportModal').style.display='none'">إلغاء</button>
         </div>
     </div>
 
@@ -305,11 +327,10 @@
     </div>
 
     <script>
-        // === 1. Core Logic & Data Restoration ===
+        // === 1. Core Logic & Data ===
         const BASE_DATE = new Date('2026-01-10T00:00:00'); 
         let currentWeekOffset = 0; 
         
-        // This ensures the team is NEVER empty on first load
         const employeesDefault = [
             { id: 6, name: 'كريم', gender: 'male', photo: '', baseOffset: 0 },
             { id: 3, name: 'هنا', gender: 'female', photo: '', baseOffset: -1 },
@@ -319,11 +340,8 @@
             { id: 5, name: 'شهد', gender: 'female', photo: '', baseOffset: 5 }
         ];
         
-        // Check if storage is empty, if so, use default
         let storedData = localStorage.getItem('smartEmployeesFinalV2');
         let employees = (storedData && storedData !== "[]") ? JSON.parse(storedData) : employeesDefault;
-
-        // Force save immediately to fix any "empty list" issues
         if(!storedData || storedData === "[]") {
             localStorage.setItem('smartEmployeesFinalV2', JSON.stringify(employees));
         }
@@ -348,9 +366,7 @@
         }
 
         // === 2. FUN ZONE LOGIC ===
-        
         function prepareFunZone() {
-            // Fill Selectors
             const selects = [document.getElementById('msgSelector'), document.getElementById('countdownSelect'), document.getElementById('playerX'), document.getElementById('playerO')];
             selects.forEach(s => {
                 const currentVal = s.value;
@@ -365,232 +381,109 @@
             });
         }
 
-        // --- Daily Message (Gender Aware) ---
         const messagesDB = {
-            male: [
-                "صباحك زي الفل، النهاردة يومك يا بطل! 💪",
-                "يا واد يا جامد، التيم من غيرك ولا حاجة",
-                "أنت البرنس بتاعنا، متزعلش نفسك من أي حاجة",
-                "ركز في التاسكات بس متنساش الفطار يا وحش",
-                "يا بخت المكتب بيك النهاردة"
-            ],
-            female: [
-                "صباحك زي الفل، النهاردة يومك يا استاااااذه ! 🌸",
-                "يا ست الكل، التيم من غيرك ولا حاجة",
-                "أنتي البرنسيسة بتاعتنا، متزعليش نفسك من أي حاجة",
-                "ركزي في التاسكات بس متنسيش الفطار يا قمر",
-                "يا بخت المكتب بيكي النهاردة",
-                "مش عارف من غيرك هيعملوا اي "
-            ]
+            male: ["صباحك زي الفل، النهاردة يومك يا بطل! 💪", "يا واد يا جامد، التيم من غيرك ولا حاجة", "أنت البرنس بتاعنا، متزعلش نفسك من أي حاجة", "ركز في التاسكات بس متنساش الفطار يا وحش", "يا بخت المكتب بيك النهاردة"],
+            female: ["صباحك زي الفل، النهاردة يومك يا استاااااذه ! 🌸", "يا ست الكل، التيم من غيرك ولا حاجة", "أنتي البرنسيسة بتاعتنا، متزعليش نفسك من أي حاجة", "ركزي في التاسكات بس متنسيش الفطار يا قمر", "يا بخت المكتب بيكي النهاردة", "مش عارف من غيرك هيعملوا اي "]
         };
 
         function showPersonalMessage() {
             const empId = document.getElementById('msgSelector').value;
             const display = document.getElementById('dailyQuote');
             if(!empId) { display.innerText = "اختر اسمك عشان تشوف رسالتك"; return; }
-            
             const emp = employees.find(e => e.id == empId);
             const msgList = (emp.gender === 'male') ? messagesDB.male : messagesDB.female;
-            
-            // Generate unique index based on Date + Emp ID
             const today = new Date().toDateString();
             const seed = emp.id + today;
-            let hash = 0;
-            for (let i = 0; i < seed.length; i++) hash = seed.charCodeAt(i) + ((hash << 5) - hash);
+            let hash = 0; for (let i = 0; i < seed.length; i++) hash = seed.charCodeAt(i) + ((hash << 5) - hash);
             const index = Math.abs(hash) % msgList.length;
-            
             display.innerText = `يا ${emp.name}.. ${msgList[index]}`;
         }
 
-        // --- Sound ---
         function playSound(url) { new Audio(url).play(); }
 
-        // --- Real Countdown Logic (Fix) ---
         let countdownInterval;
         function startPersonalCountdown() {
             const empId = document.getElementById('countdownSelect').value;
             const display = document.getElementById('countdownDisplay');
             if(countdownInterval) clearInterval(countdownInterval);
             if(!empId) return;
-
             const emp = employees.find(e => e.id == empId);
-            
             const update = () => {
                 const now = new Date();
-                
-                // Logic: Find next off day based on 8-day cycle relative to BASE_DATE
-                // Check TODAY first
-                let targetDate = new Date(now);
-                targetDate.setHours(0,0,0,0);
-                
-                let found = false;
-                let daysAdded = 0;
-                
-                // Check if today is OFF
+                let targetDate = new Date(now); targetDate.setHours(0,0,0,0);
+                let found = false; let daysAdded = 0;
                 const timeDiffNow = targetDate - BASE_DATE;
                 const dayIndexNow = Math.floor(timeDiffNow / (1000 * 60 * 60 * 24));
-                
-                if(isDayOff(emp.baseOffset, dayIndexNow)) {
-                     display.innerHTML = `<div class="countdown-msg" style="color:var(--success); font-weight:bold; font-size:20px;">🎉 إنت إجازة النهاردة!</div><div class="countdown-msg">اقفل السيستم وروح نام</div>`;
-                     return;
-                }
-
-                // If not off today, find NEXT date
+                if(isDayOff(emp.baseOffset, dayIndexNow)) { display.innerHTML = `<div class="countdown-msg" style="color:var(--success); font-weight:bold; font-size:20px;">🎉 إنت إجازة النهاردة!</div><div class="countdown-msg">اقفل السيستم وروح نام</div>`; return; }
                 while(!found && daysAdded < 50) {
                     targetDate.setDate(targetDate.getDate() + 1);
                     const timeDiff = targetDate - BASE_DATE;
                     const dayIndex = Math.floor(timeDiff / (1000 * 60 * 60 * 24)); 
-                    
-                    if(isDayOff(emp.baseOffset, dayIndex)) {
-                        found = true;
-                    }
+                    if(isDayOff(emp.baseOffset, dayIndex)) found = true;
                     daysAdded++;
                 }
-
                 const diff = targetDate - now;
-                const d = Math.ceil(diff / (1000 * 60 * 60 * 24)); // Days only logic as requested
-                
+                const d = Math.ceil(diff / (1000 * 60 * 60 * 24)); 
                 display.innerHTML = `<div class="countdown-timer">${d} أيام</div><div class="countdown-msg">هانت.. إجازتك يوم ${targetDate.toLocaleDateString('ar-EG', {weekday:'long'})}</div>`;
             };
-            update();
-            countdownInterval = setInterval(update, 1000);
+            update(); countdownInterval = setInterval(update, 1000);
         }
 
-        // --- Wheel with Dares ---
-        const maleDares = [
-            "انزل 10 ضغط دلوقتي حالا 💪", "اعمل شاي للتيم كله ☕", "قول نكتة تضحكنا كلنا 😂", 
-            "روح لعم عمرو البوفيه وقوله 'بحبك' ❤️", "امشي مشية عسكرية في الطرقة رايح جاي 👮‍♂️", 
-            "اعمل نفسك معلق كورة وعلق على اللي بيحصل في المكتب ⚽", "انزل هات كيس شيبسي لأي حد يختاره التيم 🍟", 
-            "قلد صوت حد مشهور والتيم يحاول يخمن مين 🎤", "ابعت فويس نوت لمديرك قوله 'مساء الفل يا ريس' 📱"
-        ];
-
-        const femaleDares = [
-            "غني اغنية بصوت عالي 🎤", "هاتي شوكولاتة للتيم بكرة 🍫", "اعملي قهوة لأي حد يختاروه ☕", 
-            "قولي 3 صفات حلوة في المدير 👔", "قولي موقف من مواقفك الغريبة محدش يعرفها  💃", 
-            "قولي 5 مرات بسرعة 'قميص نفيسة نشف' 🤪", "اتكلمي زي الروبوت لمدة دقيقتين كاملين 🤖", 
-            "اعملي نفسك مذيعة واعملي لقاء سريع مع اللي جنبك 🎤", "ارسمي حد من التيم على ورقة والناس تخمن مين 🎨"
-        ];
+        const maleDares = ["انزل 10 ضغط دلوقتي حالا 💪", "اعمل شاي للتيم كله ☕", "قول نكتة تضحكنا كلنا 😂", "روح لعم عمرو البوفيه وقوله 'بحبك' ❤️", "امشي مشية عسكرية في الطرقة رايح جاي 👮‍♂️", "اعمل نفسك معلق كورة وعلق على اللي بيحصل في المكتب ⚽", "انزل هات كيس شيبسي لأي حد يختاره التيم 🍟", "قلد صوت حد مشهور والتيم يحاول يخمن مين 🎤", "ابعت فويس نوت لمديرك قوله 'مساء الفل يا ريس' 📱"];
+        const femaleDares = ["غني اغنية بصوت عالي 🎤", "هاتي شوكولاتة للتيم بكرة 🍫", "اعملي قهوة لأي حد يختاروه ☕", "قولي 3 صفات حلوة في المدير 👔", "قولي موقف من مواقفك الغريبة محدش يعرفها  💃", "قولي 5 مرات بسرعة 'قميص نفيسة نشف' 🤪", "اتكلمي زي الروبوت لمدة دقيقتين كاملين 🤖", "اعملي نفسك مذيعة واعملي لقاء سريع مع اللي جنبك 🎤", "ارسمي حد من التيم على ورقة والناس تخمن مين 🎨"];
         
         let wheelCtx, wheelArc, wheelAngle = 0, wheelSpinning = false;
-        
         function startGame(game) {
             document.querySelectorAll('.game-area').forEach(el => el.style.display = 'none');
             document.getElementById('game-' + game).style.display = 'block';
-            if(game === 'wheel') initWheel();
-            if(game === 'xo') initXO();
-            if(game === 'memory') initMemory();
+            if(game === 'wheel') initWheel(); if(game === 'xo') initXO(); if(game === 'memory') initMemory();
         }
-
-        function initWheel() {
-            const c = document.getElementById('wheel'); if(!c.getContext) return; wheelCtx = c.getContext("2d");
-            if(employees.length === 0) return;
-            wheelArc = Math.PI * 2 / employees.length; drawWheel();
-        }
+        function initWheel() { const c = document.getElementById('wheel'); if(!c.getContext) return; wheelCtx = c.getContext("2d"); if(employees.length === 0) return; wheelArc = Math.PI * 2 / employees.length; drawWheel(); }
         function drawWheel() {
             const c = document.getElementById('wheel'), cw = c.width/2, ch = c.height/2; wheelCtx.clearRect(0,0,300,300);
             employees.forEach((emp, i) => {
                 const a = wheelAngle + i * wheelArc; wheelCtx.beginPath(); wheelCtx.arc(cw, ch, 140, a, a + wheelArc); wheelCtx.lineTo(cw, ch);
                 wheelCtx.fillStyle = (i%2==0)?"#FF9F43":"#ff6b6b"; wheelCtx.fill();
-                wheelCtx.save(); wheelCtx.translate(cw + Math.cos(a + wheelArc/2)*100, ch + Math.sin(a + wheelArc/2)*100);
-                wheelCtx.rotate(a + wheelArc/2 + Math.PI/2); wheelCtx.fillStyle = "white"; wheelCtx.font = "bold 14px Cairo";
+                wheelCtx.save(); wheelCtx.translate(cw + Math.cos(a + wheelArc/2)*100, ch + Math.sin(a + wheelArc/2)*100); wheelCtx.rotate(a + wheelArc/2 + Math.PI/2); wheelCtx.fillStyle = "white"; wheelCtx.font = "bold 14px Cairo";
                 wheelCtx.fillText(emp.name, -wheelCtx.measureText(emp.name).width/2, 0); wheelCtx.restore();
             });
             wheelCtx.fillStyle = "#333"; wheelCtx.beginPath(); wheelCtx.moveTo(cw-10, 20); wheelCtx.lineTo(cw+10, 20); wheelCtx.lineTo(cw, 45); wheelCtx.fill();
         }
         function spinWheel() {
-            if(wheelSpinning || employees.length===0) return;
-            wheelSpinning = true; let s = Math.random()*0.5+0.5;
+            if(wheelSpinning || employees.length===0) return; wheelSpinning = true; let s = Math.random()*0.5+0.5;
             const anim = () => {
-                wheelAngle += s; drawWheel(); s -= 0.01;
-                if(s>0) requestAnimationFrame(anim);
+                wheelAngle += s; drawWheel(); s -= 0.01; if(s>0) requestAnimationFrame(anim);
                 else {
                     wheelSpinning = false;
                     const winnerIndex = Math.floor(((2*Math.PI - (wheelAngle%(2*Math.PI)))/wheelArc))%employees.length;
                     const winner = employees[winnerIndex];
-                    
-                    // Pick Dare based on Gender
                     const dares = (winner.gender === 'male') ? maleDares : femaleDares;
                     const randomDare = dares[Math.floor(Math.random() * dares.length)];
-                    
                     document.getElementById('dareVictim').innerText = winner.name;
                     document.getElementById('dareText').innerText = randomDare;
                     document.getElementById('dareModal').style.display = 'flex';
                     confetti();
                 }
-            };
-            anim();
+            }; anim();
         }
 
-        // --- Advanced XO ---
         let xoState=["","","","","","","","",""], xoPlayer="X", xoActive=true;
-        function initXO() {
-            xoState=["","","","","","","","",""]; xoPlayer="X"; xoActive=true; 
-            document.getElementById('xoStatus').innerText="الدور على: X"; 
-            renderXO();
-        }
-        function renderXO() { 
-            const b = document.getElementById('xoBoard'); b.innerHTML=''; 
-            xoState.forEach((c,i)=>{ const d=document.createElement('div'); d.className='xo-cell'; d.innerText=c; d.onclick=()=>clkXO(i); if(c==="X") d.style.color="#FF9F43"; if(c==="O") d.style.color="#4472C4"; b.appendChild(d); }); 
-        }
-        function clkXO(i) { 
-            const pX = document.getElementById('playerX');
-            const pO = document.getElementById('playerO');
-            if(!pX.value || !pO.value) return alert("اختاروا اللاعبين الأول!");
-            
-            if(xoState[i]!=="" || !xoActive) return; 
-            xoState[i]=xoPlayer; renderXO(); chkXOWin(); 
-            xoPlayer=xoPlayer==="X"?"O":"X"; 
-            if(xoActive) document.getElementById('xoStatus').innerText="الدور على: "+xoPlayer; 
-        }
-        function chkXOWin() { 
-            const w=[[0,1,2],[3,4,5],[6,7,8],[0,3,6],[1,4,7],[2,5,8],[0,4,8],[2,4,6]]; 
-            for(let i=0;i<w.length;i++){ 
-                const [a,b,c]=w[i]; 
-                if(xoState[a] && xoState[a]===xoState[b] && xoState[a]===xoState[c]) { 
-                    const pXName = document.getElementById('playerX').options[document.getElementById('playerX').selectedIndex].text;
-                    const pOName = document.getElementById('playerO').options[document.getElementById('playerO').selectedIndex].text;
-                    const winnerName = (xoPlayer === "X") ? pXName : pOName;
-                    
-                    document.getElementById('winnerName').innerText = winnerName;
-                    document.getElementById('winModal').style.display = 'flex';
-                    xoActive=false; confetti(); return; 
-                } 
-            } 
-            if(!xoState.includes("")) { document.getElementById('xoStatus').innerText="تعادل! 😐"; xoActive=false; } 
-        }
+        function initXO() { xoState=["","","","","","","","",""]; xoPlayer="X"; xoActive=true; document.getElementById('xoStatus').innerText="الدور على: X"; renderXO(); }
+        function renderXO() { const b = document.getElementById('xoBoard'); b.innerHTML=''; xoState.forEach((c,i)=>{ const d=document.createElement('div'); d.className='xo-cell'; d.innerText=c; d.onclick=()=>clkXO(i); if(c==="X") d.style.color="#FF9F43"; if(c==="O") d.style.color="#4472C4"; b.appendChild(d); }); }
+        function clkXO(i) { const pX = document.getElementById('playerX'); const pO = document.getElementById('playerO'); if(!pX.value || !pO.value) return alert("اختاروا اللاعبين الأول!"); if(xoState[i]!=="" || !xoActive) return; xoState[i]=xoPlayer; renderXO(); chkXOWin(); xoPlayer=xoPlayer==="X"?"O":"X"; if(xoActive) document.getElementById('xoStatus').innerText="الدور على: "+xoPlayer; }
+        function chkXOWin() { const w=[[0,1,2],[3,4,5],[6,7,8],[0,3,6],[1,4,7],[2,5,8],[0,4,8],[2,4,6]]; for(let i=0;i<w.length;i++){ const [a,b,c]=w[i]; if(xoState[a] && xoState[a]===xoState[b] && xoState[a]===xoState[c]) { const pXName = document.getElementById('playerX').options[document.getElementById('playerX').selectedIndex].text; const pOName = document.getElementById('playerO').options[document.getElementById('playerO').selectedIndex].text; const winnerName = (xoPlayer === "X") ? pXName : pOName; document.getElementById('winnerName').innerText = winnerName; document.getElementById('winModal').style.display = 'flex'; xoActive=false; confetti(); return; } } if(!xoState.includes("")) { document.getElementById('xoStatus').innerText="تعادل! 😐"; xoActive=false; } }
 
-        // --- Memory Game (Restored) ---
         const emojis = ["🍕", "🚀", "🐱", "⚽", "🍦", "🎸", "🍕", "🚀", "🐱", "⚽", "🍦", "🎸"]; let memCards=[], flpCards=[], pairs=0;
         function initMemory() { memCards = emojis.sort(() => 0.5 - Math.random()); flpCards = []; pairs = 0; const b = document.getElementById('memoryBoard'); b.innerHTML = ''; document.getElementById('memoryStatus').innerText = "ابحث عن المتشابهين!"; memCards.forEach((e, i) => { const c = document.createElement('div'); c.className = 'memory-card'; c.onclick = () => flpCard(c, e); b.appendChild(c); }); }
         function flpCard(c, e) { if(c.classList.contains('flipped') || c.classList.contains('matched') || flpCards.length >= 2) return; c.classList.add('flipped'); c.innerText = e; flpCards.push({el: c, val: e}); if(flpCards.length === 2) setTimeout(chkMatch, 800); }
         function chkMatch() { const [c1, c2] = flpCards; if(c1.val === c2.val) { c1.el.classList.add('matched'); c2.el.classList.add('matched'); pairs++; if(pairs === 6) { document.getElementById('memoryStatus').innerText = "مبرووك!"; confetti(); } } else { c1.el.classList.remove('flipped'); c1.el.innerText = ""; c2.el.classList.remove('flipped'); c2.el.innerText = ""; } flpCards = []; }
 
-        // --- Scenario Picker (Preserved) ---
         function playScenario(type) { if(employees.length === 0) return alert("ضف موظفين الأول!"); const modal = document.getElementById('scenarioModal'); const title = document.getElementById('scenarioTitle'); const nameDisplay = document.getElementById('scenarioName'); modal.style.display = 'flex'; title.innerText = type === 'حلويات' ? "🍩 مين هيجيب حلويات؟" : type === 'فطار' ? "🍳 مين عليه الفطار؟" : type === 'فرفشة' ? "🥳 مين وزير السعادة؟" : "✈️ مين عايز إجازة؟"; let counter = 0; let interval = setInterval(() => { const randomName = employees[Math.floor(Math.random() * employees.length)].name; nameDisplay.innerText = randomName; counter++; if(counter > 20) { clearInterval(interval); confetti({ zIndex: 3000 }); } }, 100); }
-
-        // === Voting Logic (New) ===
-        function vote(choice) {
-            const res = document.getElementById('voteResult');
-            if(choice === 'yes') {
-                res.innerHTML = "لما اجيلكوا بقا 😂";
-                res.style.color = "var(--success)";
-                confetti();
-            } else {
-                res.innerHTML = "ي وجع القلب 💔";
-                res.style.color = "var(--danger)";
-            }
-        }
+        function vote(choice) { const res = document.getElementById('voteResult'); if(choice === 'yes') { res.innerHTML = "لما اجيلكوا بقا 😂"; res.style.color = "var(--success)"; confetti(); } else { res.innerHTML = "ي وجع القلب 💔"; res.style.color = "var(--danger)"; } }
 
         // === Standard Functions ===
         function isDayOff(empBaseOffset, daysSinceBase) { const n = daysSinceBase - empBaseOffset; const m = 8; const rem = ((n % m) + m) % m; return rem === 0 || rem === 1; }
-        
-        function renderTeam() { 
-            const grid = document.getElementById('teamGrid'); grid.innerHTML = ''; 
-            employees.forEach(emp => { 
-                let imgSrc = emp.photo || (emp.gender === 'male' ? maleAvatar : femaleAvatar); 
-                grid.innerHTML += `<div class="employee-card"><div class="card-actions"><button class="action-btn btn-del" onclick="deleteEmployee(${emp.id})"><i class="fas fa-trash"></i></button><button class="action-btn btn-edit" onclick="editEmployee(${emp.id})"><i class="fas fa-pen"></i></button></div><img src="${imgSrc}" class="avatar" onclick="openEmpModal(${emp.id})"><div class="emp-name">${emp.name}</div><div class="emp-role">Back Office</div></div>`; 
-            }); 
-        }
+        function renderTeam() { const grid = document.getElementById('teamGrid'); grid.innerHTML = ''; employees.forEach(emp => { let imgSrc = emp.photo || (emp.gender === 'male' ? maleAvatar : femaleAvatar); grid.innerHTML += `<div class="employee-card"><div class="card-actions"><button class="action-btn btn-del" onclick="deleteEmployee(${emp.id})"><i class="fas fa-trash"></i></button><button class="action-btn btn-edit" onclick="editEmployee(${emp.id})"><i class="fas fa-pen"></i></button></div><img src="${imgSrc}" class="avatar" onclick="openEmpModal(${emp.id})"><div class="emp-name">${emp.name}</div><div class="emp-role">Back Office</div></div>`; }); }
         function resetForm() { document.getElementById('formTitle').innerText = "إضافة موظف جديد"; document.getElementById('editEmpId').value = ""; document.getElementById('empName').value = ""; document.getElementById('empGender').value = "male"; document.getElementById('empStartDate').value = ""; document.getElementById('empPhotoFile').value = ""; }
         function editEmployee(id) { const emp = employees.find(e => e.id === id); if (!emp) return; resetForm(); document.getElementById('formTitle').innerText = "تعديل بيانات الموظف"; document.getElementById('editEmpId').value = emp.id; document.getElementById('empName').value = emp.name; document.getElementById('empGender').value = emp.gender; showSection('add-emp'); }
         function saveEmployee() { const id = document.getElementById('editEmpId').value; const name = document.getElementById('empName').value; const gender = document.getElementById('empGender').value; const startDateStr = document.getElementById('empStartDate').value; const fileInput = document.getElementById('empPhotoFile'); if (!name) return alert("يرجى إدخال الاسم"); const processSave = (photoData) => { if (id) { const idx = employees.findIndex(e => e.id == id); if (idx > -1) { employees[idx].name = name; employees[idx].gender = gender; if (photoData) employees[idx].photo = photoData; if (startDateStr) { const startObj = new Date(startDateStr); employees[idx].baseOffset = Math.ceil((startObj - BASE_DATE) / 86400000) + 5; } } alert("تم الحفظ"); } else { if (!startDateStr) return alert("يرجى إدخال تاريخ البدء"); const startObj = new Date(startDateStr); employees.push({ id: Date.now(), name, gender, photo: photoData, baseOffset: Math.ceil((startObj - BASE_DATE) / 86400000) + 5 }); alert("تم الإضافة"); } saveData(); resetForm(); showSection('team'); renderTeam(); }; if (fileInput.files && fileInput.files[0]) { const reader = new FileReader(); reader.onload = e => processSave(e.target.result); reader.readAsDataURL(fileInput.files[0]); } else { processSave(''); } }
@@ -598,7 +491,193 @@
         function changeWeek(d) { currentWeekOffset += d; renderSchedule(); }
         function getScheduleDataForOffset(offset) { let weekStart = new Date(BASE_DATE); weekStart.setDate(weekStart.getDate() + (offset * 7)); let headers = [], rows = []; const dayNames = ["السبت", "الأحد", "الاثنين", "الثلاثاء", "الأربعاء", "الخميس", "الجمعة"]; for(let i=0; i<7; i++) { let d = new Date(weekStart); d.setDate(d.getDate() + i); headers.push(`${dayNames[i]} ${d.toLocaleDateString('ar-EG', {day:'numeric', month:'numeric'})}`); } employees.forEach((emp, index) => { let rowData = { name: emp.name, cells: [] }; let weekStatus = [], workIndices = []; for(let i=0; i<7; i++) { let isOff = isDayOff(emp.baseOffset, (offset * 7) + i); weekStatus.push({ isOff: isOff, time: "" }); if(!isOff && i < 6) workIndices.push(i); } let isFridayOff = weekStatus[6].isOff; if(!isFridayOff) weekStatus[6].time = "13:00"; let pattern = [], isGroupA = (index % 2 === 0); if (!isFridayOff) { if(isGroupA) pattern = ["9:00", "9:00", "10:00", "10:00"]; else pattern = ["10:00", "10:00", "9:00", "9:00"]; while(pattern.length < workIndices.length) pattern.push("9:00"); } else { if(isGroupA) pattern = ["10:00", "10:00", "10:00", "9:00", "9:00"]; else pattern = ["9:00", "9:00", "10:00", "10:00", "10:00"]; while(pattern.length < workIndices.length) pattern.push("10:00"); } workIndices.forEach((dayIdx, i) => { if(pattern[i]) weekStatus[dayIdx].time = pattern[i]; }); weekStatus.forEach(d => rowData.cells.push({ text: d.isOff ? "Off" : d.time, isOff: d.isOff })); rows.push(rowData); }); return { weekStart, headers, rows }; }
         function renderSchedule() { const data = getScheduleDataForOffset(currentWeekOffset); const options = { month: 'long', day: 'numeric', year: 'numeric' }; let weekEnd = new Date(data.weekStart); weekEnd.setDate(weekEnd.getDate() + 6); document.getElementById('currentWeekLabel').innerText = `أسبوع: ${data.weekStart.toLocaleDateString('ar-EG', options)} - ${weekEnd.toLocaleDateString('ar-EG', options)}`; let theadHtml = `<tr><th>الموظف</th>`; data.headers.forEach(h => theadHtml += `<th>${h}</th>`); theadHtml += `</tr>`; document.getElementById('tableHead').innerHTML = theadHtml; const tbody = document.getElementById('tableBody'); tbody.innerHTML = ''; data.rows.forEach(row => { let rowHtml = `<tr><td style="font-weight:bold; color:var(--secondary)">${row.name}</td>`; row.cells.forEach(cell => { rowHtml += cell.isOff ? `<td class="off-cell">Off</td>` : `<td>${cell.text}</td>`; }); rowHtml += `</tr>`; tbody.innerHTML += rowHtml; }); }
-        function exportToRealExcel() { const nameMap = { 'كريم': 'Kareem', 'هنا': 'Hana', 'ندى': 'Nada', 'نهلة': 'Nahla', 'سلمى': 'Salma', 'شهد': 'Shahd' }; const engDays = ["Saturday", "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday"]; let ws_data = []; ws_data.push(["Smart-Info Back Office Schedule"]); ws_data.push([]); for (let w = 0; w < 12; w++) { const data = getScheduleDataForOffset(w); const options = { month: 'long', day: 'numeric', year: 'numeric' }; let weekEnd = new Date(data.weekStart); weekEnd.setDate(weekEnd.getDate() + 6); let range = `${data.weekStart.toLocaleDateString('en-GB', options)} - ${weekEnd.toLocaleDateString('en-GB', options)}`; ws_data.push([`Week ${w + 1}: ${range}`]); let colHeaders = ["Employee"]; for(let i=0; i<7; i++) { let d = new Date(data.weekStart); d.setDate(d.getDate() + i); colHeaders.push(`${engDays[i]} (${d.getDate()}/${d.getMonth()+1})`); } ws_data.push(colHeaders); data.rows.forEach(row => { let engName = nameMap[row.name] || row.name; let rowData = [engName]; row.cells.forEach(cell => { rowData.push(cell.text); }); ws_data.push(rowData); }); ws_data.push([]); } var wb = XLSX.utils.book_new(); var ws = XLSX.utils.aoa_to_sheet(ws_data); var wscols = [ {wch:15}, {wch:12}, {wch:12}, {wch:12}, {wch:12}, {wch:12}, {wch:12}, {wch:12} ]; ws['!cols'] = wscols; XLSX.utils.book_append_sheet(wb, ws, "Schedule"); XLSX.writeFile(wb, "Smart_Schedule_Full.xlsx"); }
+        
+        // === NEW ADVANCED EXPORT LOGIC ===
+        function openExportModal() {
+            // Fill employee selector
+            const select = document.getElementById('exportTarget');
+            select.innerHTML = '<option value="all">كل التيم (الجدول الكامل)</option>';
+            employees.forEach(emp => {
+                const opt = document.createElement('option');
+                opt.value = emp.id;
+                opt.innerText = emp.name;
+                select.appendChild(opt);
+            });
+            document.getElementById('exportModal').style.display = 'flex';
+        }
+
+        function processAdvancedExport() {
+            const targetId = document.getElementById('exportTarget').value;
+            const months = parseInt(document.getElementById('exportDuration').value);
+            const weeksToExport = months * 4; // Approx
+            const engDays = ["Saturday", "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday"];
+            const nameMap = { 'كريم': 'Kareem', 'هنا': 'Hana', 'ندى': 'Nada', 'نهلة': 'Nahla', 'سلمى': 'Salma', 'شهد': 'Shahd' };
+
+            // Filter employees based on selection
+            let exportEmployees = [];
+            let fileName = "";
+            if(targetId === 'all') {
+                exportEmployees = employees;
+                fileName = "Smart_Schedule_All_Team.xlsx";
+            } else {
+                const emp = employees.find(e => e.id == targetId);
+                if(emp) {
+                    exportEmployees = [emp];
+                    // Translate name for filename if possible
+                    const engName = nameMap[emp.name] || emp.name;
+                    fileName = `Schedule_${engName}.xlsx`;
+                }
+            }
+
+            // Create Workbook using ExcelJS
+            const workbook = new ExcelJS.Workbook();
+            const worksheet = workbook.addWorksheet('Schedule');
+
+            // --- 1. Set Columns & Widths ---
+            // Col 1 is Name, Cols 2-8 are Days
+            worksheet.columns = [
+                { width: 20 }, // Employee Name
+                { width: 15 }, // Sat
+                { width: 15 }, // Sun
+                { width: 15 }, // Mon
+                { width: 15 }, // Tue
+                { width: 15 }, // Wed
+                { width: 15 }, // Thu
+                { width: 15 }  // Fri
+            ];
+
+            // --- 2. Main Title Row ---
+            const titleRow = worksheet.addRow(['Smart-Info Back Office Schedule']);
+            worksheet.mergeCells(`A${titleRow.number}:H${titleRow.number}`);
+            
+            // Style Title
+            titleRow.getCell(1).style = {
+                font: { bold: true, size: 16, color: { argb: 'FFFFFF' }, name: 'Calibri' },
+                fill: { type: 'pattern', pattern: 'solid', fgColor: { argb: '4472C4' } },
+                alignment: { horizontal: 'center', vertical: 'middle' }
+            };
+            titleRow.height = 30;
+
+            // Metadata Row
+            worksheet.addRow([`Generated on: ${new Date().toLocaleDateString('en-GB')}`]);
+            worksheet.addRow([]); // Spacer
+
+            // --- 3. Loop through Weeks ---
+            for (let w = 0; w < weeksToExport; w++) {
+                // Calculate week based on current offset + loop index
+                const targetOffset = currentWeekOffset + w;
+                
+                // Get Date Info manually
+                let weekStart = new Date(BASE_DATE); 
+                weekStart.setDate(weekStart.getDate() + (targetOffset * 7));
+                let weekEnd = new Date(weekStart); 
+                weekEnd.setDate(weekEnd.getDate() + 6);
+                const range = `${weekStart.toLocaleDateString('en-GB')} - ${weekEnd.toLocaleDateString('en-GB')}`;
+
+                // A. Week Header Row
+                const weekRow = worksheet.addRow([`Week ${w + 1}: ${range}`]);
+                worksheet.mergeCells(`A${weekRow.number}:H${weekRow.number}`);
+                weekRow.getCell(1).style = {
+                    font: { bold: true, name: 'Calibri', size: 12 },
+                    fill: { type: 'pattern', pattern: 'solid', fgColor: { argb: 'D9E1F2' } },
+                    alignment: { horizontal: 'left', vertical: 'middle' },
+                    border: { top: {style:'thin'}, left: {style:'thin'}, bottom: {style:'thin'}, right: {style:'thin'} }
+                };
+
+                // B. Column Headers Row
+                let colHeaderValues = ["Employee"];
+                for(let i=0; i<7; i++) { 
+                    let d = new Date(weekStart); d.setDate(d.getDate() + i); 
+                    colHeaderValues.push(`${engDays[i]} (${d.getDate()}/${d.getMonth()+1})`); 
+                }
+                const headerRow = worksheet.addRow(colHeaderValues);
+                
+                // Style Header Row
+                headerRow.eachCell((cell) => {
+                    cell.style = {
+                        font: { bold: true, name: 'Calibri' },
+                        fill: { type: 'pattern', pattern: 'solid', fgColor: { argb: 'EFEFEF' } },
+                        border: { top: {style:'thin'}, left: {style:'thin'}, bottom: {style:'thin'}, right: {style:'thin'} },
+                        alignment: { horizontal: 'center', vertical: 'middle' }
+                    };
+                });
+
+                // C. Data Rows
+                exportEmployees.forEach((emp, index) => {
+                    // Translate Name
+                    let engName = nameMap[emp.name] || emp.name;
+                    let rowValues = [engName];
+                    let isOffArray = [false]; // first col is name (never off)
+
+                    // Logic for cells (copied from renderSchedule)
+                    let weekStatus = [];
+                    let workIndices = [];
+                    for(let i=0; i<7; i++) {
+                        let isOff = isDayOff(emp.baseOffset, (targetOffset * 7) + i);
+                        weekStatus.push({ isOff: isOff, time: "" });
+                        if(!isOff && i < 6) workIndices.push(i);
+                    }
+                    
+                    let isFridayOff = weekStatus[6].isOff;
+                    if(!isFridayOff) weekStatus[6].time = "13:00";
+                    
+                    // Determine Group A/B based on original index
+                    const originalIndex = employees.findIndex(e => e.id === emp.id);
+                    let isGroupA = (originalIndex % 2 === 0);
+                    
+                    let pattern = [];
+                    if (!isFridayOff) {
+                        if(isGroupA) pattern = ["9:00", "9:00", "10:00", "10:00"]; else pattern = ["10:00", "10:00", "9:00", "9:00"];
+                        while(pattern.length < workIndices.length) pattern.push("9:00");
+                    } else {
+                        if(isGroupA) pattern = ["10:00", "10:00", "10:00", "9:00", "9:00"]; else pattern = ["9:00", "9:00", "10:00", "10:00", "10:00"];
+                        while(pattern.length < workIndices.length) pattern.push("10:00");
+                    }
+                    workIndices.forEach((dayIdx, i) => { if(pattern[i]) weekStatus[dayIdx].time = pattern[i]; });
+                    
+                    weekStatus.forEach(d => {
+                        rowValues.push(d.isOff ? "Off" : d.time);
+                        isOffArray.push(d.isOff);
+                    });
+
+                    // Add Row to Sheet
+                    const dataRow = worksheet.addRow(rowValues);
+
+                    // Style Cells
+                    dataRow.eachCell((cell, colNumber) => {
+                        // Base Style
+                        cell.border = { top: {style:'thin'}, left: {style:'thin'}, bottom: {style:'thin'}, right: {style:'thin'} };
+                        cell.alignment = { horizontal: 'center', vertical: 'middle' };
+                        cell.font = { name: 'Calibri' };
+
+                        // Name Column Formatting
+                        if(colNumber === 1) {
+                            cell.font = { bold: true, name: 'Calibri' };
+                            cell.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'F9F9F9' } };
+                        }
+
+                        // Off Day Formatting
+                        if (isOffArray[colNumber - 1]) { // check corresponding isOff flag
+                            cell.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FF9999' } };
+                            cell.font = { color: { argb: '9C0006' }, bold: true, name: 'Calibri' };
+                        }
+                    });
+                });
+
+                worksheet.addRow([]); // Space between weeks
+            }
+
+            // --- 4. Write & Download ---
+            workbook.xlsx.writeBuffer().then((buffer) => {
+                const blob = new Blob([buffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+                saveAs(blob, fileName);
+                document.getElementById('exportModal').style.display='none';
+            });
+        }
+
+        // Kept existing generic export for fallback or quick use, linked to new function now via modal
+        function exportToRealExcel() { openExportModal(); }
+
         function openEmpModal(id) { const emp = employees.find(e => e.id === id); document.getElementById('modalName').innerText = emp.name; document.getElementById('modalImg').src = emp.photo || (emp.gender === 'male'? maleAvatar: femaleAvatar); let breakNames = []; const dayNames = ["السبت", "الأحد", "الاثنين", "الثلاثاء", "الأربعاء", "الخميس", "الجمعة"]; for(let i=0; i<7; i++) { if(isDayOff(emp.baseOffset, (currentWeekOffset * 7) + i)) breakNames.push(dayNames[i]); } document.getElementById('modalBreak').innerText = breakNames.join(" و "); document.getElementById('empModal').style.display = 'flex'; }
         function closeModal() { document.getElementById('empModal').style.display = 'none'; document.getElementById('scenarioModal').style.display = 'none'; document.getElementById('dareModal').style.display = 'none'; document.getElementById('winModal').style.display = 'none'; }
         function saveData() { localStorage.setItem('smartEmployeesFinalV2', JSON.stringify(employees)); }
