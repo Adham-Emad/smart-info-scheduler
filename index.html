@@ -3,13 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Smart-Info | Fun & Scheduler</title>
+    <title>Smart-Info | Fun & Scheduler Pro</title>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     
     <script src="https://cdnjs.cloudflare.com/ajax/libs/exceljs/4.3.0/exceljs.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
-    
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
     
     <style>
@@ -92,21 +91,44 @@
         .modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); display: none; justify-content: center; align-items: center; z-index: 2000; }
         .modal-content { background: white; padding: 30px; border-radius: 15px; width: 500px; max-width: 90%; text-align: center; }
 
-        /* Fun Zone Styles */
+        /* === FUN ZONE STYLES UPDATED === */
         #fun-section { display: none; }
-        .fun-header { text-align: center; background: linear-gradient(135deg, #FF9F43, #ff6b6b); color: white; padding: 30px; border-radius: 15px; margin-bottom: 30px; }
-        .fun-quote { font-size: 20px; font-weight: bold; margin-top: 10px; font-style: italic; min-height: 40px;}
+        .fun-header { text-align: center; background: linear-gradient(135deg, #FF9F43, #ff6b6b); color: white; padding: 30px; border-radius: 15px; margin-bottom: 30px; box-shadow: 0 10px 20px rgba(255, 159, 67, 0.3); }
+        .fun-quote { font-size: 22px; font-weight: bold; margin-top: 15px; font-style: italic; min-height: 60px; line-height: 1.6; text-shadow: 1px 1px 2px rgba(0,0,0,0.1); }
+        
         .sound-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(100px, 1fr)); gap: 10px; margin-bottom: 30px; }
         .sound-btn { background: white; border: 2px solid var(--sound-btn); color: var(--sound-btn); padding: 10px; border-radius: 10px; font-weight: bold; cursor: pointer; transition: 0.2s; display: flex; flex-direction: column; align-items: center; gap: 5px; }
         .sound-btn:active { transform: scale(0.95); background: var(--sound-btn); color: white; }
+        
         .countdown-container { background: white; padding: 25px; border-radius: 15px; margin-bottom: 30px; text-align: center; border: 2px solid #ddd; }
         .countdown-timer { font-size: 32px; font-weight: bold; color: var(--purple); margin: 15px 0; direction: ltr; }
-        .game-area { background: white; padding: 20px; border-radius: 15px; margin-top: 20px; display: none; text-align: center; min-height: 400px; animation: fadeIn 0.5s; }
-        .fun-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; }
-        .game-card { background: white; border-radius: 15px; padding: 20px; text-align: center; cursor: pointer; transition: 0.3s; border-bottom: 5px solid var(--fun-color); box-shadow: 0 5px 15px rgba(0,0,0,0.05); }
-        .game-card:hover { transform: translateY(-5px); box-shadow: 0 10px 20px rgba(0,0,0,0.1); }
-        .game-icon { font-size: 40px; color: var(--fun-color); margin-bottom: 10px; }
+        
+        .game-area { background: white; padding: 20px; border-radius: 15px; margin-top: 20px; display: none; text-align: center; min-height: 400px; animation: fadeIn 0.5s; position: relative; }
+        .fun-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 15px; margin-bottom: 30px; }
+        .game-card { background: white; border-radius: 15px; padding: 15px; text-align: center; cursor: pointer; transition: 0.3s; border-bottom: 5px solid var(--fun-color); box-shadow: 0 5px 15px rgba(0,0,0,0.05); height: 100%; display: flex; flex-direction: column; justify-content: center; align-items: center;}
+        .game-card:hover { transform: translateY(-5px); box-shadow: 0 10px 20px rgba(0,0,0,0.1); background: #fffcf5; }
+        .game-icon { font-size: 35px; color: var(--fun-color); margin-bottom: 10px; }
+        .game-card h3 { font-size: 16px; margin: 0; }
+
+        /* External Games Section */
+        .external-games-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 15px; margin-bottom: 30px; }
+        .ext-game-card { background: linear-gradient(45deg, #2c3e50, #3498db); color: white; border-radius: 15px; padding: 15px; text-decoration: none; display: flex; align-items: center; gap: 10px; transition: transform 0.3s; box-shadow: 0 4px 10px rgba(0,0,0,0.2); }
+        .ext-game-card:hover { transform: scale(1.05); box-shadow: 0 6px 15px rgba(0,0,0,0.3); }
+        .ext-game-icon { font-size: 24px; background: rgba(255,255,255,0.2); width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; border-radius: 50%; }
+
         canvas#wheel { width: 300px; height: 300px; margin: 20px auto; display: block; }
+        
+        /* New Games Styles */
+        .reaction-box { width: 100%; height: 250px; background: #dc3545; color: white; display: flex; align-items: center; justify-content: center; font-size: 24px; font-weight: bold; border-radius: 10px; cursor: pointer; user-select: none; margin: 20px 0; }
+        .reaction-box.green { background: #28a745; }
+        
+        .rps-choice { font-size: 50px; cursor: pointer; margin: 0 10px; transition: 0.2s; }
+        .rps-choice:hover { transform: scale(1.2); }
+        
+        .typing-box { border: 2px dashed #ccc; padding: 20px; border-radius: 10px; margin: 15px 0; background: #f9f9f9; font-size: 18px; }
+        .typing-input { width: 100%; padding: 10px; border: 2px solid var(--primary); border-radius: 5px; font-size: 18px; margin-top: 10px; text-align: center;}
+
+        /* XO & Memory Styles */
         .xo-board { display: grid; grid-template-columns: repeat(3, 80px); gap: 5px; margin: 20px auto; width: 250px; }
         .xo-cell { width: 80px; height: 80px; background: #eee; font-size: 40px; display: flex; align-items: center; justify-content: center; cursor: pointer; font-weight: bold; border-radius: 10px; color: var(--primary);}
         .xo-controls { margin-bottom: 15px; display: flex; gap: 10px; justify-content: center; }
@@ -114,9 +136,11 @@
         .memory-card { width: 60px; height: 60px; background: var(--primary); border-radius: 8px; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 24px; color: white; }
         .memory-card.flipped { background: white; border: 2px solid var(--primary); }
         .memory-card.matched { background: var(--success); cursor: default; }
+        
         .scenario-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 15px; margin-bottom: 30px; }
         .scenario-btn { background: white; border: 2px solid var(--purple); color: var(--purple); padding: 15px; border-radius: 10px; font-weight: bold; cursor: pointer; transition: 0.2s; display: flex; align-items: center; justify-content: center; gap: 10px; }
         .scenario-btn:hover { background: var(--purple); color: white; transform: scale(1.05); }
+        
         .fun-footer { margin-top: 40px; padding: 20px; background: white; border-radius: 15px; text-align: center; border-top: 5px solid var(--purple); box-shadow: 0 5px 15px rgba(0,0,0,0.05); }
         .vote-buttons { display: flex; justify-content: center; gap: 20px; margin: 15px 0; }
         .btn-vote { padding: 10px 25px; border: none; border-radius: 20px; font-weight: bold; cursor: pointer; font-size: 16px; transition: 0.2s; color: white; }
@@ -181,15 +205,15 @@
 
         <div id="fun-section" class="animate">
             <div class="fun-header">
-                <h2>😂 رسالة السعادة اليومية</h2>
-                <p style="margin-bottom:5px; font-size:12px; color:rgba(255,255,255,0.8)">رسالتك النهاردة خاصة بيك لوحدك 😉</p>
-                <div id="dailyQuote" class="fun-quote">اختر اسمك عشان تشوف رسالتك</div>
-                <select id="msgSelector" onchange="showPersonalMessage()" style="padding:5px; border-radius:5px; margin-top:10px;">
+                <h2>✨ رسالتك النهاردة يا بطل ✨</h2>
+                <p style="margin-bottom:5px; font-size:12px; color:rgba(255,255,255,0.9)">رسائل خاصة ليك انت مخصوص، متكررة ومملة؟ انسي الكلام ده!</p>
+                <div id="dailyQuote" class="fun-quote">اختار اسمك عشان تشوف رسالتك</div>
+                <select id="msgSelector" onchange="showPersonalMessage()" style="padding:10px; border-radius:20px; border:none; margin-top:15px; font-weight:bold; cursor:pointer;">
                     <option value="">-- مين اللي بيقرا؟ --</option>
                 </select>
             </div>
 
-            <h3 style="color: var(--sound-btn); margin-bottom: 15px;">🔊 ساوند بورد المكتب</h3>
+            <h3 style="color: var(--sound-btn); margin-bottom: 15px;"><i class="fas fa-music"></i> ساوند بورد المكتب</h3>
             <div class="sound-grid">
                 <button class="sound-btn" onclick="playSound('https://www.soundjay.com/human/sounds/applause-01.mp3')"><i class="fas fa-hands-clapping"></i> تسقيف</button>
                 <button class="sound-btn" onclick="playSound('https://www.myinstants.com/media/sounds/cricket-sound.mp3')"><i class="fas fa-bug"></i> صرصور</button>
@@ -201,26 +225,44 @@
 
             <div class="countdown-container">
                 <h3 style="color: #333;"><i class="fas fa-hourglass-half"></i> فاضل قد إيه على إجازتك؟</h3>
-                <p>بنحسبلك الوقت بالثانية على أول يوم إجازة جاي ليك:</p>
+                <p>عداد دقيق عشان تعرف اللحظة المنتظرة:</p>
                 <select id="countdownSelect" onchange="startPersonalCountdown()" style="padding: 10px; border-radius: 5px; width: 200px; margin-bottom: 10px;"></select>
                 <div id="countdownDisplay">
-                    <div class="countdown-msg">اختار اسمك يا بطل...</div>
+                    <div class="countdown-msg">اختار اسمك يا وحش...</div>
                 </div>
             </div>
 
-            <h3 style="color: var(--purple); margin-bottom: 15px;">🤔 فقرة "مين عليه الدور؟"</h3>
-            <div class="scenario-grid">
-                <button class="scenario-btn" onclick="playScenario('حلويات')"><i class="fas fa-birthday-cake"></i> مين هيجيب حلويات بكرة؟</button>
-                <button class="scenario-btn" onclick="playScenario('فطار')"><i class="fas fa-utensils"></i> مين عليه الفطار النهاردة؟</button>
-                <button class="scenario-btn" onclick="playScenario('فرفشة')"><i class="fas fa-smile-wink"></i> مين أكتر واحد بيفرفش التيم؟</button>
-                <button class="scenario-btn" onclick="playScenario('اجازة')"><i class="fas fa-plane-departure"></i> مين محتاج إجازة دلوقتي حالا؟</button>
+            <h3 style="color: var(--purple); margin-bottom: 15px;">🚀 ألعاب أونلاين جامدة (External)</h3>
+            <p style="margin-bottom: 10px; font-size: 14px; color: #666;">زهقت من اللعب العادية؟ دوس والعب اونلاين مع ناس تانية:</p>
+            <div class="external-games-grid">
+                <a href="https://skribbl.io/" target="_blank" class="ext-game-card">
+                    <div class="ext-game-icon"><i class="fas fa-pencil-alt"></i></div>
+                    <div><strong>Skribbl.io</strong><br><small>ارسم وخلي التيم يخمن</small></div>
+                </a>
+                <a href="https://poki.com/" target="_blank" class="ext-game-card" style="background: linear-gradient(45deg, #00b894, #00cec9);">
+                    <div class="ext-game-icon"><i class="fas fa-gamepad"></i></div>
+                    <div><strong>Poki Games</strong><br><small>مكتبة ألعاب ضخمة</small></div>
+                </a>
+                <a href="https://www.chess.com/play/computer" target="_blank" class="ext-game-card" style="background: linear-gradient(45deg, #6c5ce7, #a29bfe);">
+                    <div class="ext-game-icon"><i class="fas fa-chess-knight"></i></div>
+                    <div><strong>Chess</strong><br><small>شغل دماغك شوية</small></div>
+                </a>
+                <a href="https://garticphone.com/" target="_blank" class="ext-game-card" style="background: linear-gradient(45deg, #e17055, #fab1a0);">
+                    <div class="ext-game-icon"><i class="fas fa-phone-alt"></i></div>
+                    <div><strong>Gartic Phone</strong><br><small>لعبة التليفون الخربان</small></div>
+                </a>
             </div>
 
-            <h3 style="color: var(--fun-color); margin-bottom: 15px;">🎮 الألعاب</h3>
+            <h3 style="color: var(--fun-color); margin-bottom: 15px;">🎮 ألعابنا الداخلية (New & Classic)</h3>
             <div class="fun-grid">
                 <div class="game-card" onclick="startGame('wheel')"><div class="game-icon"><i class="fas fa-bullseye"></i></div><h3>عجلة الحظ (والأحكام)</h3></div>
                 <div class="game-card" onclick="startGame('xo')"><div class="game-icon"><i class="fas fa-times"></i></div><h3>X - O (تحدي)</h3></div>
                 <div class="game-card" onclick="startGame('memory')"><div class="game-icon"><i class="fas fa-brain"></i></div><h3>ذاكرة السمكة</h3></div>
+                
+                <div class="game-card" onclick="startGame('reaction')"><div class="game-icon"><i class="fas fa-bolt"></i></div><h3>اختبار السرعة</h3></div>
+                <div class="game-card" onclick="startGame('rps')"><div class="game-icon"><i class="fas fa-hand-scissors"></i></div><h3>حجرة ورقة مقص</h3></div>
+                <div class="game-card" onclick="startGame('typing')"><div class="game-icon"><i class="fas fa-keyboard"></i></div><h3>أسرع كاتب</h3></div>
+                <div class="game-card" onclick="startGame('guess')"><div class="game-icon"><i class="fas fa-question-circle"></i></div><h3>خمن الرقم</h3></div>
             </div>
 
             <div id="game-wheel" class="game-area">
@@ -233,9 +275,7 @@
             <div id="game-xo" class="game-area">
                 <h3 style="color:var(--primary)">❌ لعبة إكس أو ⭕</h3>
                 <div class="xo-controls">
-                    <select id="playerX"></select>
-                    <span>ضد</span>
-                    <select id="playerO"></select>
+                    <select id="playerX"></select> <span>ضد</span> <select id="playerO"></select>
                 </div>
                 <div id="xoBoard" class="xo-board"></div>
                 <p id="xoStatus">اختاروا اللاعبين وابدأوا!</p>
@@ -249,8 +289,56 @@
                 <button class="btn-nav" onclick="initMemory()">إعادة اللعب</button>
             </div>
 
+            <div id="game-reaction" class="game-area">
+                <h3>⚡ اختبار سرعة رد الفعل</h3>
+                <p>اضغط لما اللون يبقى أخضر!</p>
+                <div id="reactionBox" class="reaction-box" onclick="handleClickReaction()">دوس ابدأ</div>
+                <p id="reactionResult"></p>
+                <button class="btn-nav" onclick="initReaction()">ابدأ اللعب</button>
+            </div>
+
+            <div id="game-rps" class="game-area">
+                <h3>✊✋✌ حجرة ورقة مقص</h3>
+                <p>لاعب الكمبيوتر وحاول تكسبه</p>
+                <div style="margin: 30px 0;">
+                    <span class="rps-choice" onclick="playRPS('✊')">✊</span>
+                    <span class="rps-choice" onclick="playRPS('✋')">✋</span>
+                    <span class="rps-choice" onclick="playRPS('✌')">✌</span>
+                </div>
+                <div id="rpsResult" style="font-size: 20px; font-weight: bold; min-height: 40px;"></div>
+                <div style="margin-top:20px; color:#777;">النتيجة: انت <span id="pScore">0</span> - <span id="cScore">0</span> الكمبيوتر</div>
+            </div>
+
+            <div id="game-typing" class="game-area">
+                <h3>⌨️ تحدي الكتابة السريعة</h3>
+                <p>اكتب الجملة دي بأسرع ما يمكن:</p>
+                <div id="typingText" class="typing-box">جاري تحميل جملة...</div>
+                <input type="text" id="typingInput" class="typing-input" placeholder="ابدأ الكتابة هنا..." oninput="checkTyping()" disabled>
+                <p id="typingResult" style="font-weight:bold; margin-top:10px;"></p>
+                <button class="btn-nav" onclick="initTyping()">جملة جديدة</button>
+            </div>
+
+            <div id="game-guess" class="game-area">
+                <h3>🔢 خمن الرقم السري</h3>
+                <p>انا مخبي رقم من 1 لـ 100. حاول تجيبه!</p>
+                <input type="number" id="guessInput" style="padding:10px; width:100px; font-size:18px; text-align:center;" placeholder="??">
+                <button class="btn-main" onclick="checkGuess()">خمن</button>
+                <p id="guessResult" style="margin-top:15px; font-weight:bold; font-size:18px; color:var(--primary);"></p>
+                <button class="btn-nav" onclick="initGuess()" style="margin-top:10px;">لعبة جديدة</button>
+            </div>
+
+            <h3 style="color: var(--purple); margin-bottom: 15px; margin-top: 30px;">🤔 فقرة "مين عليه الدور؟"</h3>
+            <div class="scenario-grid">
+                <button class="scenario-btn" onclick="playScenario('حلويات')"><i class="fas fa-birthday-cake"></i> مين هيجيب حلويات بكرة؟</button>
+                <button class="scenario-btn" onclick="playScenario('فطار')"><i class="fas fa-utensils"></i> مين عليه الفطار النهاردة؟</button>
+                <button class="scenario-btn" onclick="playScenario('فرفشة')"><i class="fas fa-smile-wink"></i> مين أكتر واحد بيفرفش التيم؟</button>
+                <button class="scenario-btn" onclick="playScenario('اجازة')"><i class="fas fa-plane-departure"></i> مين محتاج إجازة دلوقتي حالا؟</button>
+                <button class="scenario-btn" onclick="playScenario('قهوة')"><i class="fas fa-coffee"></i> مين يعزمنا ع القهوة؟</button>
+                <button class="scenario-btn" onclick="playScenario('مشكلة')"><i class="fas fa-fire"></i> مين هيلبس مصيبة النهاردة؟</button>
+            </div>
+
             <div class="fun-footer">
-                <h3>حاولت اعمل حاجة صح 🫡</h3>
+                <h3>المكان ده معمول عشان تفصلوا شوية ❤️</h3>
                 <p>تحبوا نزود العاب اكتر ؟؟</p>
                 <div class="vote-buttons">
                     <button class="btn-vote yes" onclick="vote('yes')">اه 😍</button>
@@ -278,24 +366,8 @@
     <div id="exportModal" class="modal">
         <div class="modal-content" style="max-width: 450px;">
             <h2 style="color: var(--success); margin-bottom: 20px;"><i class="fas fa-file-excel"></i> تحميل جدول الشفتات</h2>
-            
-            <div class="input-group">
-                <label>تحميل لـ:</label>
-                <select id="exportTarget">
-                    <option value="all">كل التيم (الجدول الكامل)</option>
-                    </select>
-            </div>
-
-            <div class="input-group">
-                <label>المدة (بداية من الأسبوع الحالي):</label>
-                <select id="exportDuration">
-                    <option value="1">شهر واحد (4 أسابيع)</option>
-                    <option value="2">شهرين (8 أسابيع)</option>
-                    <option value="3" selected>3 شهور (12 أسبوع)</option>
-                    <option value="6">6 شهور (24 أسبوع)</option>
-                </select>
-            </div>
-
+            <div class="input-group"><label>تحميل لـ:</label><select id="exportTarget"><option value="all">كل التيم (الجدول الكامل)</option></select></div>
+            <div class="input-group"><label>المدة (بداية من الأسبوع الحالي):</label><select id="exportDuration"><option value="1">شهر واحد (4 أسابيع)</option><option value="2">شهرين (8 أسابيع)</option><option value="3" selected>3 شهور (12 أسبوع)</option><option value="6">6 شهور (24 أسبوع)</option></select></div>
             <button class="btn-main" style="width: 100%; background: var(--success);" onclick="processAdvancedExport()">تحميل الملف</button>
             <button class="btn-main" style="width: 100%; background: #777; margin-top: 10px;" onclick="document.getElementById('exportModal').style.display='none'">إلغاء</button>
         </div>
@@ -365,7 +437,7 @@
             }
         }
 
-        // === 2. FUN ZONE LOGIC ===
+        // === 2. FUN ZONE LOGIC (UPDATED MASSIVELY) ===
         function prepareFunZone() {
             const selects = [document.getElementById('msgSelector'), document.getElementById('countdownSelect'), document.getElementById('playerX'), document.getElementById('playerO')];
             selects.forEach(s => {
@@ -381,21 +453,50 @@
             });
         }
 
+        // --- MASSIVE QUOTE DATABASE (60+ items per gender) ---
         const messagesDB = {
-            male: ["صباحك زي الفل، النهاردة يومك يا بطل! 💪", "يا واد يا جامد، التيم من غيرك ولا حاجة", "أنت البرنس بتاعنا، متزعلش نفسك من أي حاجة", "ركز في التاسكات بس متنساش الفطار يا وحش", "يا بخت المكتب بيك النهاردة"],
-            female: ["صباحك زي الفل، النهاردة يومك يا استاااااذه ! 🌸", "يا ست الكل، التيم من غيرك ولا حاجة", "أنتي البرنسيسة بتاعتنا، متزعليش نفسك من أي حاجة", "ركزي في التاسكات بس متنسيش الفطار يا قمر", "يا بخت المكتب بيكي النهاردة", "مش عارف من غيرك هيعملوا اي "]
+            male: [
+                "يا بطل العالم في الصبر، كمل والفرج قريب! 💪", "صباحك أبيض زي قلبك، بس ركز في الشغل شوية 😉", "العملاء بيحبوك، والمدير بيراقبك، خد بالك يا نجم 🌟", "يا واد يا جامد، التيم من غيرك ولا حاجة", "أنت البرنس بتاعنا، متزعلش نفسك من أي حاجة", 
+                "ركز في التاسكات بس متنساش الفطار يا وحش", "يا بخت المكتب بيك النهاردة", "عارف إنك تعبت، بس إجازتك قربت يا كبير", "إبتسامتك بتنور المكتب، إوعى تكشر في وش العميل 😄", "أنت قد المسؤولية، بس بلاش تأخير بكرة ⏰",
+                "وحش الشفتات اللي مبيشتكيش، ربنا يقويك", "يا ملك الإكسيل، علمنا شوية من إبداعاتك", "خف ع القهوة شوية صحتك بالدنيا ☕", "الشغل مش هيطير، بس أعصابك محتاجة راحة", "يا دينامو التيم، هدي السرعة شوية عشان متفصلش",
+                "أنت مش مجرد موظف، أنت ركن أساسي هنا 🏗️", "لو حد ضايقك النهاردة قولي وأنا أتصرف معاه 🤜", "صباح النشاط والحيوية، ولا أنت لسه نايم؟ 😴", "يا فنان في حل المشاكل، ورينا سحرك النهاردة", "النهارده يومك، أثبت للكل إنك قدها",
+                "بلاش تبص للساعة كل شوية، الوقت هيعدي ⌚", "أنت مثال للإلتزام، ياريت الكل زيك (كدبة بيضا) 😜", "خليك رايق، مفيش حاجة تستاهل تعكير مزاجك", "يا واكل الجو، سيب شوية نجاح لغيرك", "أنت العقل المدبر، إحنا من غيرك تايهين",
+                "متخليش الشغل ينسيك حياتك، افرح وانبسط", "يا سكر التيم، كلامك بيحلي اليوم 🍬", "أنت الجندي المجهول اللي شايل الشيلة", "ربنا يرزقك بونص كبير يفرح قلبك 💰", "يا ملك الروقان، علمنا إزاي بنفصل كدة",
+                "الشغل معاك متعة، حتى لو الدنيا مولعة", "أنت الشخص اللي الكل بيحب يشتغل معاه", "يا أذكى أخواتك، وريهم الشغل الصح", "إجازتك الجاية هتبقى دمار، استعد 🏖️", "متشيلش هم بكرة، بكرة رزقه معاه",
+                "يا صاحب الضحكة الجنان، سمعنا واحدة", "أنت لسه مشربتش قهوتك؟ عشان كدة مكشر ☕", "يا غاوي تعب، ريح شوية محدش بيجري وراك", "أنت العمود الفقري للتيم، اوعى تتكسر", "صباح الإنجازات والتارجت المتقفل 🎯",
+                "يا حلال العقد، شوفلنا حل في المصيبة دي", "أنت تستاهل ترقية، بس الميزانية بعافية شوية 😂", "خليك واثق في نفسك، أنت قدها وزيادة", "يا محبوب الجماهير، صوتك لوحده طرب", "أنت مكسب لأي مكان تروحه، بس خليك معانا",
+                "يا برنس الليالي، سهران ولا نمت بدري؟", "الشغل من غيرك ناقصه حاجة كبيرة", "أنت السند وقت الشدة، تسلم يا رجولة", "يا فاهم الدنيا صح، كبر دماغك وعيش", "النهاردة يوم الحظ، جرب تطلب طلب من المدير 🍀",
+                "أنت الكابتن بتاعنا، وجهنا للطريق الصح", "يا عاقل يا راسي، محتاجين حكمتك النهاردة", "بلاش تاكل لوحدك، العيش والملح يطمر 🥪", "أنت النجم اللي بينور ضلمة الشفت", "يا ملك التوفير، علمنا نحافظ ع المرتب",
+                "أنت الشغل الشاغل للكل، مبهدلهم بنجاحك", "يا واثق الخطوة، امشي ملكاً في الكوريدور", "أنت اللي بتعمل حس للمكان، الله عليك", "صباحك مليان خير وبركة ورزق واسع", "يلا شد حيلك، هانت وتخلص الشيفت 🏁"
+            ],
+            female: [
+                "صباحك زي الفل، النهاردة يومك يا استاااااذه ! 🌸", "يا ست الكل، التيم من غيرك ولا حاجة", "أنتي البرنسيسة بتاعتنا، متزعليش نفسك من أي حاجة", "ركزي في التاسكات بس متنسيش الفطار يا قمر", "يا بخت المكتب بيكي النهاردة",
+                "مش عارف من غيرك هيعملوا اي، انتي الأساس 💅", "يا ملكة الـ Multitasking، براحة على نفسك شوية", "ابتسامتك دي كفيلة تحل أي مشكلة مع العميل 😄", "صباح الورد والياسمين على أشطر كتكوتة في التيم", "انتي مش بس موظفة، انتي روح المكان ✨",
+                "يا فنانة في شغلك، الدقة دي مفيش منها", "متخليش ضغط الشغل يأثر على جمالك 💆‍♀️", "انتي قدوة لكل البنات في التيم، كملي تألق", "يا صاحبة الذوق العالي، لبسك النهاردة شيك أوي 👗", "الشغل بيحلو بوجودك، حتى لو فيه ضغط",
+                "يا سكرة، قهوتك مظبوطة ولا نعملك واحدة؟ ☕", "انتي اللي بتشجعينا نكمل، طاقتك الإيجابية معدية", "يا عقلة يا راسية، رأيك دايماً في محله 🧠", "بلاش عصبية، الجمال ده مينفعش يكشر", "انتي تستاهلي كل خير، ربنا يفرح قلبك",
+                "يا دينامو المكتب، إنجازاتك بتتكلم عنك", "خليكي واثقة إنك أشطر واحدة هنا، وبجد 😉", "يا فراشة التيم، خفيفة الظل ومحبوبة من الكل 🦋", "النهاردة شكلك مشرق، أكيد نايمة كويس", "انتي السكر اللي محلي مرار الشغل 🍬",
+                "يا قمر 14، نورتي المكتب بطلتك", "متشليش هم حاجة، كله هيعدي وإنتي قدها", "يا أذكى بنوتة، حلولك دايماً مبتكرة 💡", "إجازتك قربت، جهزي الشنطة والفساتين 🏖️", "انتي مصدر السعادة لينا، ربنا يديمك نعمة",
+                "يا شعلة نشاط، هدي اللعب شوية يا بطلة", "كلامك بيطمن، وخفة دمك بتنسينا التعب", "يا زينة البنات، الاحترام والذوق كله عندك", "الشغل ده ولا حاجة جنب قدراتك، إنتي سوبر وومان 🦸‍♀️", "صباح الرضا والتفاؤل، يومك جميل بإذن الله",
+                "يا كتلة حنان، بتسمعي للكل وتساعديهم ❤️", "انتي اللي بتعملي توازن في المكان ده", "يا ملكة التنظيم، علمينا إزاي بتلحقي تخلصي كله", "بلاش سهر كتير، عيونك الحلوة محتاجين راحة 👀", "انتي الجوهرة اللي بنخاف عليها، حافظي على نفسك",
+                "يا صاحبة الكاريزما، حضورك طاغي ما شاء الله", "النهاردة يومك، اطلبي واتمني والكل ينفذ", "يا برنسيسة، مكانك مش هنا، مكانك فوق القمة 👑", "انتي السند لزميلاتك، جدعة وبنت أصول", "صباح النجاح والطموح اللي ملوش حدود",
+                "يا رقيقة المشاعر، بلاش تاخدي الكلام على أعصابك", "انتي اللي بتحلي القعدة، متغبيش عننا", "يا شاطرة يا لهلوبة، بتلقطيها وهي طايرة", "العملاء بيحبوكي عشان اسلوبك الراقي 📞", "يا وش السعد، وجودك بيجيب الخير",
+                "انتي مش محتاجة مكياج، جمالك رباني 🥰", "يا صاحبة الضحكة الرنانة، ضحكينا معاكي", "النهاردة إجازة من النكد، افرحي وانبسطي", "انتي قد المسؤولية وأكتر، ربنا يوفقك", "يا بونبوناية، مسكرة وزي العسل 🍭",
+                "الشغل بيخلص، بس صحتك أهم يا جميلة", "انتي النجمة اللي بتلمع في سماء الشركة ✨", "يا طيبة القلب، ربنا يرزقك على قد نيتك", "صباحك مسك وعنبر، يا أغلى من الجوهر", "يلا شدي حيلك، هانت ونروح 🏠"
+            ]
         };
 
         function showPersonalMessage() {
             const empId = document.getElementById('msgSelector').value;
             const display = document.getElementById('dailyQuote');
-            if(!empId) { display.innerText = "اختر اسمك عشان تشوف رسالتك"; return; }
+            if(!empId) { display.innerText = "اختار اسمك عشان تشوف رسالتك"; return; }
             const emp = employees.find(e => e.id == empId);
             const msgList = (emp.gender === 'male') ? messagesDB.male : messagesDB.female;
-            const today = new Date().toDateString();
-            const seed = emp.id + today;
-            let hash = 0; for (let i = 0; i < seed.length; i++) hash = seed.charCodeAt(i) + ((hash << 5) - hash);
-            const index = Math.abs(hash) % msgList.length;
+            
+            // Generate a daily index based on date + ID (so it changes daily but stays same for the day)
+            const today = new Date();
+            const seed = emp.id + today.getDate() + today.getMonth(); // Unique per day per person
+            const index = seed % msgList.length; // Ensure it wraps around
+            
             display.innerText = `يا ${emp.name}.. ${msgList[index]}`;
         }
 
@@ -429,15 +530,38 @@
             update(); countdownInterval = setInterval(update, 1000);
         }
 
-        const maleDares = ["انزل 10 ضغط دلوقتي حالا 💪", "اعمل شاي للتيم كله ☕", "قول نكتة تضحكنا كلنا 😂", "روح لعم عمرو البوفيه وقوله 'بحبك' ❤️", "امشي مشية عسكرية في الطرقة رايح جاي 👮‍♂️", "اعمل نفسك معلق كورة وعلق على اللي بيحصل في المكتب ⚽", "انزل هات كيس شيبسي لأي حد يختاره التيم 🍟", "قلد صوت حد مشهور والتيم يحاول يخمن مين 🎤", "ابعت فويس نوت لمديرك قوله 'مساء الفل يا ريس' 📱"];
-        const femaleDares = ["غني اغنية بصوت عالي 🎤", "هاتي شوكولاتة للتيم بكرة 🍫", "اعملي قهوة لأي حد يختاروه ☕", "قولي 3 صفات حلوة في المدير 👔", "قولي موقف من مواقفك الغريبة محدش يعرفها  💃", "قولي 5 مرات بسرعة 'قميص نفيسة نشف' 🤪", "اتكلمي زي الروبوت لمدة دقيقتين كاملين 🤖", "اعملي نفسك مذيعة واعملي لقاء سريع مع اللي جنبك 🎤", "ارسمي حد من التيم على ورقة والناس تخمن مين 🎨"];
+        // --- MASSIVE DARES DATABASE ---
+        const maleDares = [
+            "انزل 10 ضغط دلوقتي حالا 💪", "اعمل شاي للتيم كله ☕", "قول نكتة تضحكنا كلنا 😂", "روح لعم عمرو البوفيه وقوله 'بحبك' ❤️", "امشي مشية عسكرية في الطرقة رايح جاي 👮‍♂️", 
+            "اعمل نفسك معلق كورة وعلق على اللي بيحصل في المكتب ⚽", "انزل هات كيس شيبسي لأي حد يختاره التيم 🍟", "قلد صوت حد مشهور والتيم يحاول يخمن مين 🎤", "ابعت فويس نوت لمديرك قوله 'مساء الفل يا ريس' 📱", "اتكلم لغة عربية فصحى لمدة 10 دقايق 📜",
+            "وقف على رجل واحدة لمدة دقيقة كاملة 🦩", "قول 'بطتكم بطت بطتنا' 5 مرات بسرعة 🦆", "اعزم حد من التيم على حاجة ساقعة 🥤", "غير صورة البروفايل بتاعتك لقطة لمدة يوم 🐱", "غني مقطع من أغنية شعبي بصوت عالي 🎶",
+            "اعمل مساج لكتف اللي قاعد جنبك (لو وافق) 💆‍♂️", "ارقص رقصة مايكل جاكسون في مكانك 🕺", "قول 3 مميزات في الشخص اللي قاعد على يمينك 👉", "اعمل نفسك بتكلم حد في التليفون واتخانق معاه وهمي 📞", "اكتب بوست على جروب الشغل تشكر فيه نفسك 📝",
+            "هات كوباية مية واشربها كلها مرة واحدة 💧", "اعمل نفسك نايم والناس تصحيك 😴", "قول سر محدش يعرفه عنك 🤫", "البس النظارة بالمشقلب لمدة 5 دقايق 👓", "اعمل حركة الكونغ فو 🥋",
+            "قول نكتة بايخة وتضحك عليها بصوت عالي 😆", "روح لأي حد وقوله 'أنت المفضل عندي' وامشي 🏃‍♂️", "اعمل صوت حيوان والناس تخمن 🦁", "امسك قلم وحاول توقفه على مناخيرك 🖊️", "قول جدول الضرب بتاع 7 كامل ✖️"
+        ];
+        const femaleDares = [
+            "غني اغنية بصوت عالي 🎤", "هاتي شوكولاتة للتيم بكرة 🍫", "اعملي قهوة لأي حد يختاروه ☕", "قولي 3 صفات حلوة في المدير 👔", "قولي موقف من مواقفك الغريبة محدش يعرفها 💃", 
+            "قولي 5 مرات بسرعة 'قميص نفيسة نشف' 🤪", "اتكلمي زي الروبوت لمدة دقيقتين كاملين 🤖", "اعملي نفسك مذيعة واعملي لقاء سريع مع اللي جنبك 🎤", "ارسمي حد من التيم على ورقة والناس تخمن مين 🎨", "ابعتي رسالة شكر لأكتر حد بيساعدك في الشغل 💌",
+            "قولي أطول كلمة تعرفيها في الإنجليزي 🔡", "احكي قصة قصيرة مرعبة (تأليف) 👻", "قولي 'أنا قوية ومفترية' بصوت عالي 💪", "اعملي ضفيرة لشعرك (لو ينفع) أو لزميلة 💇‍♀️", "كلي ليمونة من غير ما تغيري ملامح وشك 🍋",
+            "قولي 5 حاجات موجودة في شنطتك دلوقتي 👜", "قلدي ضحكة حد مشهور 😂", "اعملي مشهد تمثيلي درامي جداً 🎭", "غمضي عينك وحاولي تلمسي أنفك بصباعك 👃", "احكمي على حد تاني حكم خفيف ⚖️",
+            "قولي أكتر أكلة بتعرفي تطبخيها 🍳", "اعملي حركة يوجا صعبة 🧘‍♀️", "تكلمي بلهجة خليجي لمدة 5 دقايق 🇦🇪", "قولي اسم فيلم بيعبر عن حياتك المهنية 🎬", "اعملي قلب بايدك لكل الموجودين ❤️",
+            "قولي لونك المفضل وليه 🎨", "اضحكي ضحكة شريرة 😈", "خمني مين أكتر واحد عايز يروح دلوقتي 🏠", "قولي مثل شعبي قديم 👵", "زغرطي (لو بتعرفي) 🎉"
+        ];
         
         let wheelCtx, wheelArc, wheelAngle = 0, wheelSpinning = false;
         function startGame(game) {
             document.querySelectorAll('.game-area').forEach(el => el.style.display = 'none');
             document.getElementById('game-' + game).style.display = 'block';
-            if(game === 'wheel') initWheel(); if(game === 'xo') initXO(); if(game === 'memory') initMemory();
+            if(game === 'wheel') initWheel(); 
+            if(game === 'xo') initXO(); 
+            if(game === 'memory') initMemory();
+            if(game === 'reaction') initReaction(); // New
+            if(game === 'rps') initRPS(); // New
+            if(game === 'typing') initTyping(); // New
+            if(game === 'guess') initGuess(); // New
         }
+
+        // --- Wheel Logic ---
         function initWheel() { const c = document.getElementById('wheel'); if(!c.getContext) return; wheelCtx = c.getContext("2d"); if(employees.length === 0) return; wheelArc = Math.PI * 2 / employees.length; drawWheel(); }
         function drawWheel() {
             const c = document.getElementById('wheel'), cw = c.width/2, ch = c.height/2; wheelCtx.clearRect(0,0,300,300);
@@ -467,21 +591,118 @@
             }; anim();
         }
 
+        // --- XO Logic ---
         let xoState=["","","","","","","","",""], xoPlayer="X", xoActive=true;
         function initXO() { xoState=["","","","","","","","",""]; xoPlayer="X"; xoActive=true; document.getElementById('xoStatus').innerText="الدور على: X"; renderXO(); }
         function renderXO() { const b = document.getElementById('xoBoard'); b.innerHTML=''; xoState.forEach((c,i)=>{ const d=document.createElement('div'); d.className='xo-cell'; d.innerText=c; d.onclick=()=>clkXO(i); if(c==="X") d.style.color="#FF9F43"; if(c==="O") d.style.color="#4472C4"; b.appendChild(d); }); }
         function clkXO(i) { const pX = document.getElementById('playerX'); const pO = document.getElementById('playerO'); if(!pX.value || !pO.value) return alert("اختاروا اللاعبين الأول!"); if(xoState[i]!=="" || !xoActive) return; xoState[i]=xoPlayer; renderXO(); chkXOWin(); xoPlayer=xoPlayer==="X"?"O":"X"; if(xoActive) document.getElementById('xoStatus').innerText="الدور على: "+xoPlayer; }
         function chkXOWin() { const w=[[0,1,2],[3,4,5],[6,7,8],[0,3,6],[1,4,7],[2,5,8],[0,4,8],[2,4,6]]; for(let i=0;i<w.length;i++){ const [a,b,c]=w[i]; if(xoState[a] && xoState[a]===xoState[b] && xoState[a]===xoState[c]) { const pXName = document.getElementById('playerX').options[document.getElementById('playerX').selectedIndex].text; const pOName = document.getElementById('playerO').options[document.getElementById('playerO').selectedIndex].text; const winnerName = (xoPlayer === "X") ? pXName : pOName; document.getElementById('winnerName').innerText = winnerName; document.getElementById('winModal').style.display = 'flex'; xoActive=false; confetti(); return; } } if(!xoState.includes("")) { document.getElementById('xoStatus').innerText="تعادل! 😐"; xoActive=false; } }
 
+        // --- Memory Logic ---
         const emojis = ["🍕", "🚀", "🐱", "⚽", "🍦", "🎸", "🍕", "🚀", "🐱", "⚽", "🍦", "🎸"]; let memCards=[], flpCards=[], pairs=0;
         function initMemory() { memCards = emojis.sort(() => 0.5 - Math.random()); flpCards = []; pairs = 0; const b = document.getElementById('memoryBoard'); b.innerHTML = ''; document.getElementById('memoryStatus').innerText = "ابحث عن المتشابهين!"; memCards.forEach((e, i) => { const c = document.createElement('div'); c.className = 'memory-card'; c.onclick = () => flpCard(c, e); b.appendChild(c); }); }
         function flpCard(c, e) { if(c.classList.contains('flipped') || c.classList.contains('matched') || flpCards.length >= 2) return; c.classList.add('flipped'); c.innerText = e; flpCards.push({el: c, val: e}); if(flpCards.length === 2) setTimeout(chkMatch, 800); }
         function chkMatch() { const [c1, c2] = flpCards; if(c1.val === c2.val) { c1.el.classList.add('matched'); c2.el.classList.add('matched'); pairs++; if(pairs === 6) { document.getElementById('memoryStatus').innerText = "مبرووك!"; confetti(); } } else { c1.el.classList.remove('flipped'); c1.el.innerText = ""; c2.el.classList.remove('flipped'); c2.el.innerText = ""; } flpCards = []; }
 
-        function playScenario(type) { if(employees.length === 0) return alert("ضف موظفين الأول!"); const modal = document.getElementById('scenarioModal'); const title = document.getElementById('scenarioTitle'); const nameDisplay = document.getElementById('scenarioName'); modal.style.display = 'flex'; title.innerText = type === 'حلويات' ? "🍩 مين هيجيب حلويات؟" : type === 'فطار' ? "🍳 مين عليه الفطار؟" : type === 'فرفشة' ? "🥳 مين وزير السعادة؟" : "✈️ مين عايز إجازة؟"; let counter = 0; let interval = setInterval(() => { const randomName = employees[Math.floor(Math.random() * employees.length)].name; nameDisplay.innerText = randomName; counter++; if(counter > 20) { clearInterval(interval); confetti({ zIndex: 3000 }); } }, 100); }
+        // --- NEW GAMES LOGIC ---
+        
+        // 1. Reaction Game
+        let reactionStart = 0; let reactionTimeout; let reactionWaiting = false;
+        function initReaction() {
+            const box = document.getElementById('reactionBox');
+            box.style.background = '#dc3545'; box.innerText = "دوس ابدأ"; box.classList.remove('green');
+            document.getElementById('reactionResult').innerText = "";
+            reactionWaiting = false; clearTimeout(reactionTimeout);
+        }
+        function handleClickReaction() {
+            const box = document.getElementById('reactionBox');
+            if(box.innerText === "دوس ابدأ") {
+                box.innerText = "استنى اللون الأخضر...";
+                box.style.background = '#dc3545';
+                reactionWaiting = true;
+                const delay = Math.floor(Math.random() * 3000) + 1000;
+                reactionTimeout = setTimeout(() => {
+                    box.style.background = '#28a745'; box.innerText = "دوس بسررررعة!"; box.classList.add('green');
+                    reactionStart = Date.now(); reactionWaiting = false;
+                }, delay);
+            } else if (box.classList.contains('green')) {
+                const time = Date.now() - reactionStart;
+                box.innerText = `${time} ms`;
+                document.getElementById('reactionResult').innerText = (time < 250) ? "يا ساتر! إنت فضائي؟ 👽" : (time < 400) ? "عاش يا وحش! ⚡" : "محتاج قهوة يا زميلي 🐢";
+                box.classList.remove('green');
+                confetti();
+            } else if (reactionWaiting) {
+                clearTimeout(reactionTimeout);
+                box.innerText = "يا متسرع! استنى الأخضر ❌";
+                reactionWaiting = false;
+            }
+        }
+
+        // 2. Rock Paper Scissors
+        let pScore = 0, cScore = 0;
+        function initRPS() { pScore=0; cScore=0; document.getElementById('pScore').innerText=0; document.getElementById('cScore').innerText=0; document.getElementById('rpsResult').innerText="ابدأ اللعب!"; }
+        function playRPS(playerChoice) {
+            const choices = ['✊', '✋', '✌'];
+            const compChoice = choices[Math.floor(Math.random() * 3)];
+            let result = "";
+            if (playerChoice === compChoice) result = "تعادل! 😐";
+            else if ((playerChoice === '✊' && compChoice === '✌') || (playerChoice === '✋' && compChoice === '✊') || (playerChoice === '✌' && compChoice === '✋')) {
+                result = "أنت كسبت! 🎉"; pScore++; confetti();
+            } else {
+                result = "الكمبيوتر كسب! 🤖"; cScore++;
+            }
+            document.getElementById('rpsResult').innerHTML = `أنت: ${playerChoice} | الكمبيوتر: ${compChoice}<br>${result}`;
+            document.getElementById('pScore').innerText = pScore; document.getElementById('cScore').innerText = cScore;
+        }
+
+        // 3. Typing Speed
+        const sentences = [
+            "الشرطة في خدمة الشعب والشعب في خدمة الشرطة",
+            "خيط حرير على حيط خليل",
+            "طبق طبقنا طبق في طبق طبقكم",
+            "ارنبنا في منور انور وارنب انور في منورنا",
+            "Back Office Heroes are the best",
+            "أحب عملي جداً جداً جداً",
+            "شمس تشمسي وتشمسي شمس"
+        ];
+        let typingStart = 0;
+        function initTyping() {
+            const txt = sentences[Math.floor(Math.random() * sentences.length)];
+            document.getElementById('typingText').innerText = txt;
+            document.getElementById('typingInput').value = '';
+            document.getElementById('typingInput').disabled = false;
+            document.getElementById('typingInput').focus();
+            document.getElementById('typingResult').innerText = "";
+            typingStart = Date.now();
+        }
+        function checkTyping() {
+            const target = document.getElementById('typingText').innerText;
+            const current = document.getElementById('typingInput').value;
+            if(current === target) {
+                const time = ((Date.now() - typingStart) / 1000).toFixed(2);
+                document.getElementById('typingResult').innerText = `ممتاز! خلصت في ${time} ثانية 🚀`;
+                document.getElementById('typingInput').disabled = true;
+                confetti();
+            }
+        }
+
+        // 4. Guess Number
+        let targetNum = 0;
+        function initGuess() { targetNum = Math.floor(Math.random() * 100) + 1; document.getElementById('guessInput').value = ''; document.getElementById('guessResult').innerText = "انا اخترت رقم، خمن هو كام؟"; }
+        function checkGuess() {
+            const val = parseInt(document.getElementById('guessInput').value);
+            const res = document.getElementById('guessResult');
+            if(!val) return;
+            if(val === targetNum) { res.innerText = "صح! مبرووك 🎉"; res.style.color = "var(--success)"; confetti(); }
+            else if(val < targetNum) { res.innerText = "لا.. الرقم أكبر ⬆️"; res.style.color = "var(--danger)"; }
+            else { res.innerText = "لا.. الرقم أصغر ⬇️"; res.style.color = "var(--danger)"; }
+        }
+
+        // --- Common ---
+        function playScenario(type) { if(employees.length === 0) return alert("ضف موظفين الأول!"); const modal = document.getElementById('scenarioModal'); const title = document.getElementById('scenarioTitle'); const nameDisplay = document.getElementById('scenarioName'); modal.style.display = 'flex'; title.innerText = type === 'حلويات' ? "🍩 مين هيجيب حلويات؟" : type === 'فطار' ? "🍳 مين عليه الفطار؟" : type === 'فرفشة' ? "🥳 مين وزير السعادة؟" : type === 'اجازة' ? "✈️ مين عايز إجازة؟" : type === 'قهوة' ? "☕ مين هيعزمنا؟" : "🔥 مين هيلبس المصيبة؟"; let counter = 0; let interval = setInterval(() => { const randomName = employees[Math.floor(Math.random() * employees.length)].name; nameDisplay.innerText = randomName; counter++; if(counter > 20) { clearInterval(interval); confetti({ zIndex: 3000 }); } }, 100); }
         function vote(choice) { const res = document.getElementById('voteResult'); if(choice === 'yes') { res.innerHTML = "لما اجيلكوا بقا 😂"; res.style.color = "var(--success)"; confetti(); } else { res.innerHTML = "ي وجع القلب 💔"; res.style.color = "var(--danger)"; } }
 
-        // === Standard Functions ===
+        // === Standard Functions (No changes here) ===
         function isDayOff(empBaseOffset, daysSinceBase) { const n = daysSinceBase - empBaseOffset; const m = 8; const rem = ((n % m) + m) % m; return rem === 0 || rem === 1; }
         function renderTeam() { const grid = document.getElementById('teamGrid'); grid.innerHTML = ''; employees.forEach(emp => { let imgSrc = emp.photo || (emp.gender === 'male' ? maleAvatar : femaleAvatar); grid.innerHTML += `<div class="employee-card"><div class="card-actions"><button class="action-btn btn-del" onclick="deleteEmployee(${emp.id})"><i class="fas fa-trash"></i></button><button class="action-btn btn-edit" onclick="editEmployee(${emp.id})"><i class="fas fa-pen"></i></button></div><img src="${imgSrc}" class="avatar" onclick="openEmpModal(${emp.id})"><div class="emp-name">${emp.name}</div><div class="emp-role">Back Office</div></div>`; }); }
         function resetForm() { document.getElementById('formTitle').innerText = "إضافة موظف جديد"; document.getElementById('editEmpId').value = ""; document.getElementById('empName').value = ""; document.getElementById('empGender').value = "male"; document.getElementById('empStartDate').value = ""; document.getElementById('empPhotoFile').value = ""; }
@@ -492,191 +713,8 @@
         function getScheduleDataForOffset(offset) { let weekStart = new Date(BASE_DATE); weekStart.setDate(weekStart.getDate() + (offset * 7)); let headers = [], rows = []; const dayNames = ["السبت", "الأحد", "الاثنين", "الثلاثاء", "الأربعاء", "الخميس", "الجمعة"]; for(let i=0; i<7; i++) { let d = new Date(weekStart); d.setDate(d.getDate() + i); headers.push(`${dayNames[i]} ${d.toLocaleDateString('ar-EG', {day:'numeric', month:'numeric'})}`); } employees.forEach((emp, index) => { let rowData = { name: emp.name, cells: [] }; let weekStatus = [], workIndices = []; for(let i=0; i<7; i++) { let isOff = isDayOff(emp.baseOffset, (offset * 7) + i); weekStatus.push({ isOff: isOff, time: "" }); if(!isOff && i < 6) workIndices.push(i); } let isFridayOff = weekStatus[6].isOff; if(!isFridayOff) weekStatus[6].time = "13:00"; let pattern = [], isGroupA = (index % 2 === 0); if (!isFridayOff) { if(isGroupA) pattern = ["9:00", "9:00", "10:00", "10:00"]; else pattern = ["10:00", "10:00", "9:00", "9:00"]; while(pattern.length < workIndices.length) pattern.push("9:00"); } else { if(isGroupA) pattern = ["10:00", "10:00", "10:00", "9:00", "9:00"]; else pattern = ["9:00", "9:00", "10:00", "10:00", "10:00"]; while(pattern.length < workIndices.length) pattern.push("10:00"); } workIndices.forEach((dayIdx, i) => { if(pattern[i]) weekStatus[dayIdx].time = pattern[i]; }); weekStatus.forEach(d => rowData.cells.push({ text: d.isOff ? "Off" : d.time, isOff: d.isOff })); rows.push(rowData); }); return { weekStart, headers, rows }; }
         function renderSchedule() { const data = getScheduleDataForOffset(currentWeekOffset); const options = { month: 'long', day: 'numeric', year: 'numeric' }; let weekEnd = new Date(data.weekStart); weekEnd.setDate(weekEnd.getDate() + 6); document.getElementById('currentWeekLabel').innerText = `أسبوع: ${data.weekStart.toLocaleDateString('ar-EG', options)} - ${weekEnd.toLocaleDateString('ar-EG', options)}`; let theadHtml = `<tr><th>الموظف</th>`; data.headers.forEach(h => theadHtml += `<th>${h}</th>`); theadHtml += `</tr>`; document.getElementById('tableHead').innerHTML = theadHtml; const tbody = document.getElementById('tableBody'); tbody.innerHTML = ''; data.rows.forEach(row => { let rowHtml = `<tr><td style="font-weight:bold; color:var(--secondary)">${row.name}</td>`; row.cells.forEach(cell => { rowHtml += cell.isOff ? `<td class="off-cell">Off</td>` : `<td>${cell.text}</td>`; }); rowHtml += `</tr>`; tbody.innerHTML += rowHtml; }); }
         
-        // === NEW ADVANCED EXPORT LOGIC ===
-        function openExportModal() {
-            // Fill employee selector
-            const select = document.getElementById('exportTarget');
-            select.innerHTML = '<option value="all">كل التيم (الجدول الكامل)</option>';
-            employees.forEach(emp => {
-                const opt = document.createElement('option');
-                opt.value = emp.id;
-                opt.innerText = emp.name;
-                select.appendChild(opt);
-            });
-            document.getElementById('exportModal').style.display = 'flex';
-        }
-
-        function processAdvancedExport() {
-            const targetId = document.getElementById('exportTarget').value;
-            const months = parseInt(document.getElementById('exportDuration').value);
-            const weeksToExport = months * 4; // Approx
-            const engDays = ["Saturday", "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday"];
-            const nameMap = { 'كريم': 'Kareem', 'هنا': 'Hana', 'ندى': 'Nada', 'نهلة': 'Nahla', 'سلمى': 'Salma', 'شهد': 'Shahd' };
-
-            // Filter employees based on selection
-            let exportEmployees = [];
-            let fileName = "";
-            if(targetId === 'all') {
-                exportEmployees = employees;
-                fileName = "Smart_Schedule_All_Team.xlsx";
-            } else {
-                const emp = employees.find(e => e.id == targetId);
-                if(emp) {
-                    exportEmployees = [emp];
-                    // Translate name for filename if possible
-                    const engName = nameMap[emp.name] || emp.name;
-                    fileName = `Schedule_${engName}.xlsx`;
-                }
-            }
-
-            // Create Workbook using ExcelJS
-            const workbook = new ExcelJS.Workbook();
-            const worksheet = workbook.addWorksheet('Schedule');
-
-            // --- 1. Set Columns & Widths ---
-            // Col 1 is Name, Cols 2-8 are Days
-            worksheet.columns = [
-                { width: 20 }, // Employee Name
-                { width: 15 }, // Sat
-                { width: 15 }, // Sun
-                { width: 15 }, // Mon
-                { width: 15 }, // Tue
-                { width: 15 }, // Wed
-                { width: 15 }, // Thu
-                { width: 15 }  // Fri
-            ];
-
-            // --- 2. Main Title Row ---
-            const titleRow = worksheet.addRow(['Smart-Info Back Office Schedule']);
-            worksheet.mergeCells(`A${titleRow.number}:H${titleRow.number}`);
-            
-            // Style Title
-            titleRow.getCell(1).style = {
-                font: { bold: true, size: 16, color: { argb: 'FFFFFF' }, name: 'Calibri' },
-                fill: { type: 'pattern', pattern: 'solid', fgColor: { argb: '4472C4' } },
-                alignment: { horizontal: 'center', vertical: 'middle' }
-            };
-            titleRow.height = 30;
-
-            // Metadata Row
-            worksheet.addRow([`Generated on: ${new Date().toLocaleDateString('en-GB')}`]);
-            worksheet.addRow([]); // Spacer
-
-            // --- 3. Loop through Weeks ---
-            for (let w = 0; w < weeksToExport; w++) {
-                // Calculate week based on current offset + loop index
-                const targetOffset = currentWeekOffset + w;
-                
-                // Get Date Info manually
-                let weekStart = new Date(BASE_DATE); 
-                weekStart.setDate(weekStart.getDate() + (targetOffset * 7));
-                let weekEnd = new Date(weekStart); 
-                weekEnd.setDate(weekEnd.getDate() + 6);
-                const range = `${weekStart.toLocaleDateString('en-GB')} - ${weekEnd.toLocaleDateString('en-GB')}`;
-
-                // A. Week Header Row
-                const weekRow = worksheet.addRow([`Week ${w + 1}: ${range}`]);
-                worksheet.mergeCells(`A${weekRow.number}:H${weekRow.number}`);
-                weekRow.getCell(1).style = {
-                    font: { bold: true, name: 'Calibri', size: 12 },
-                    fill: { type: 'pattern', pattern: 'solid', fgColor: { argb: 'D9E1F2' } },
-                    alignment: { horizontal: 'left', vertical: 'middle' },
-                    border: { top: {style:'thin'}, left: {style:'thin'}, bottom: {style:'thin'}, right: {style:'thin'} }
-                };
-
-                // B. Column Headers Row
-                let colHeaderValues = ["Employee"];
-                for(let i=0; i<7; i++) { 
-                    let d = new Date(weekStart); d.setDate(d.getDate() + i); 
-                    colHeaderValues.push(`${engDays[i]} (${d.getDate()}/${d.getMonth()+1})`); 
-                }
-                const headerRow = worksheet.addRow(colHeaderValues);
-                
-                // Style Header Row
-                headerRow.eachCell((cell) => {
-                    cell.style = {
-                        font: { bold: true, name: 'Calibri' },
-                        fill: { type: 'pattern', pattern: 'solid', fgColor: { argb: 'EFEFEF' } },
-                        border: { top: {style:'thin'}, left: {style:'thin'}, bottom: {style:'thin'}, right: {style:'thin'} },
-                        alignment: { horizontal: 'center', vertical: 'middle' }
-                    };
-                });
-
-                // C. Data Rows
-                exportEmployees.forEach((emp, index) => {
-                    // Translate Name
-                    let engName = nameMap[emp.name] || emp.name;
-                    let rowValues = [engName];
-                    let isOffArray = [false]; // first col is name (never off)
-
-                    // Logic for cells (copied from renderSchedule)
-                    let weekStatus = [];
-                    let workIndices = [];
-                    for(let i=0; i<7; i++) {
-                        let isOff = isDayOff(emp.baseOffset, (targetOffset * 7) + i);
-                        weekStatus.push({ isOff: isOff, time: "" });
-                        if(!isOff && i < 6) workIndices.push(i);
-                    }
-                    
-                    let isFridayOff = weekStatus[6].isOff;
-                    if(!isFridayOff) weekStatus[6].time = "13:00";
-                    
-                    // Determine Group A/B based on original index
-                    const originalIndex = employees.findIndex(e => e.id === emp.id);
-                    let isGroupA = (originalIndex % 2 === 0);
-                    
-                    let pattern = [];
-                    if (!isFridayOff) {
-                        if(isGroupA) pattern = ["9:00", "9:00", "10:00", "10:00"]; else pattern = ["10:00", "10:00", "9:00", "9:00"];
-                        while(pattern.length < workIndices.length) pattern.push("9:00");
-                    } else {
-                        if(isGroupA) pattern = ["10:00", "10:00", "10:00", "9:00", "9:00"]; else pattern = ["9:00", "9:00", "10:00", "10:00", "10:00"];
-                        while(pattern.length < workIndices.length) pattern.push("10:00");
-                    }
-                    workIndices.forEach((dayIdx, i) => { if(pattern[i]) weekStatus[dayIdx].time = pattern[i]; });
-                    
-                    weekStatus.forEach(d => {
-                        rowValues.push(d.isOff ? "Off" : d.time);
-                        isOffArray.push(d.isOff);
-                    });
-
-                    // Add Row to Sheet
-                    const dataRow = worksheet.addRow(rowValues);
-
-                    // Style Cells
-                    dataRow.eachCell((cell, colNumber) => {
-                        // Base Style
-                        cell.border = { top: {style:'thin'}, left: {style:'thin'}, bottom: {style:'thin'}, right: {style:'thin'} };
-                        cell.alignment = { horizontal: 'center', vertical: 'middle' };
-                        cell.font = { name: 'Calibri' };
-
-                        // Name Column Formatting
-                        if(colNumber === 1) {
-                            cell.font = { bold: true, name: 'Calibri' };
-                            cell.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'F9F9F9' } };
-                        }
-
-                        // Off Day Formatting
-                        if (isOffArray[colNumber - 1]) { // check corresponding isOff flag
-                            cell.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FF9999' } };
-                            cell.font = { color: { argb: '9C0006' }, bold: true, name: 'Calibri' };
-                        }
-                    });
-                });
-
-                worksheet.addRow([]); // Space between weeks
-            }
-
-            // --- 4. Write & Download ---
-            workbook.xlsx.writeBuffer().then((buffer) => {
-                const blob = new Blob([buffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
-                saveAs(blob, fileName);
-                document.getElementById('exportModal').style.display='none';
-            });
-        }
-
-        // Kept existing generic export for fallback or quick use, linked to new function now via modal
-        function exportToRealExcel() { openExportModal(); }
+        function openExportModal() { const select = document.getElementById('exportTarget'); select.innerHTML = '<option value="all">كل التيم (الجدول الكامل)</option>'; employees.forEach(emp => { const opt = document.createElement('option'); opt.value = emp.id; opt.innerText = emp.name; select.appendChild(opt); }); document.getElementById('exportModal').style.display = 'flex'; }
+        function processAdvancedExport() { const targetId = document.getElementById('exportTarget').value; const months = parseInt(document.getElementById('exportDuration').value); const weeksToExport = months * 4; const engDays = ["Saturday", "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday"]; const nameMap = { 'كريم': 'Kareem', 'هنا': 'Hana', 'ندى': 'Nada', 'نهلة': 'Nahla', 'سلمى': 'Salma', 'شهد': 'Shahd' }; let exportEmployees = []; let fileName = ""; if(targetId === 'all') { exportEmployees = employees; fileName = "Smart_Schedule_All_Team.xlsx"; } else { const emp = employees.find(e => e.id == targetId); if(emp) { exportEmployees = [emp]; const engName = nameMap[emp.name] || emp.name; fileName = `Schedule_${engName}.xlsx`; } } const workbook = new ExcelJS.Workbook(); const worksheet = workbook.addWorksheet('Schedule'); worksheet.columns = [{ width: 20 }, { width: 15 }, { width: 15 }, { width: 15 }, { width: 15 }, { width: 15 }, { width: 15 }, { width: 15 }]; const titleRow = worksheet.addRow(['Smart-Info Back Office Schedule']); worksheet.mergeCells(`A${titleRow.number}:H${titleRow.number}`); titleRow.getCell(1).style = { font: { bold: true, size: 16, color: { argb: 'FFFFFF' }, name: 'Calibri' }, fill: { type: 'pattern', pattern: 'solid', fgColor: { argb: '4472C4' } }, alignment: { horizontal: 'center', vertical: 'middle' } }; titleRow.height = 30; worksheet.addRow([`Generated on: ${new Date().toLocaleDateString('en-GB')}`]); worksheet.addRow([]); for (let w = 0; w < weeksToExport; w++) { const targetOffset = currentWeekOffset + w; let weekStart = new Date(BASE_DATE); weekStart.setDate(weekStart.getDate() + (targetOffset * 7)); let weekEnd = new Date(weekStart); weekEnd.setDate(weekEnd.getDate() + 6); const range = `${weekStart.toLocaleDateString('en-GB')} - ${weekEnd.toLocaleDateString('en-GB')}`; const weekRow = worksheet.addRow([`Week ${w + 1}: ${range}`]); worksheet.mergeCells(`A${weekRow.number}:H${weekRow.number}`); weekRow.getCell(1).style = { font: { bold: true, name: 'Calibri', size: 12 }, fill: { type: 'pattern', pattern: 'solid', fgColor: { argb: 'D9E1F2' } }, alignment: { horizontal: 'left', vertical: 'middle' }, border: { top: {style:'thin'}, left: {style:'thin'}, bottom: {style:'thin'}, right: {style:'thin'} } }; let colHeaderValues = ["Employee"]; for(let i=0; i<7; i++) { let d = new Date(weekStart); d.setDate(d.getDate() + i); colHeaderValues.push(`${engDays[i]} (${d.getDate()}/${d.getMonth()+1})`); } const headerRow = worksheet.addRow(colHeaderValues); headerRow.eachCell((cell) => { cell.style = { font: { bold: true, name: 'Calibri' }, fill: { type: 'pattern', pattern: 'solid', fgColor: { argb: 'EFEFEF' } }, border: { top: {style:'thin'}, left: {style:'thin'}, bottom: {style:'thin'}, right: {style:'thin'} }, alignment: { horizontal: 'center', vertical: 'middle' } }; }); exportEmployees.forEach((emp, index) => { let engName = nameMap[emp.name] || emp.name; let rowValues = [engName]; let isOffArray = [false]; let weekStatus = []; let workIndices = []; for(let i=0; i<7; i++) { let isOff = isDayOff(emp.baseOffset, (targetOffset * 7) + i); weekStatus.push({ isOff: isOff, time: "" }); if(!isOff && i < 6) workIndices.push(i); } let isFridayOff = weekStatus[6].isOff; if(!isFridayOff) weekStatus[6].time = "13:00"; const originalIndex = employees.findIndex(e => e.id === emp.id); let isGroupA = (originalIndex % 2 === 0); let pattern = []; if (!isFridayOff) { if(isGroupA) pattern = ["9:00", "9:00", "10:00", "10:00"]; else pattern = ["10:00", "10:00", "9:00", "9:00"]; while(pattern.length < workIndices.length) pattern.push("9:00"); } else { if(isGroupA) pattern = ["10:00", "10:00", "10:00", "9:00", "9:00"]; else pattern = ["9:00", "9:00", "10:00", "10:00", "10:00"]; while(pattern.length < workIndices.length) pattern.push("10:00"); } workIndices.forEach((dayIdx, i) => { if(pattern[i]) weekStatus[dayIdx].time = pattern[i]; }); weekStatus.forEach(d => { rowValues.push(d.isOff ? "Off" : d.time); isOffArray.push(d.isOff); }); const dataRow = worksheet.addRow(rowValues); dataRow.eachCell((cell, colNumber) => { cell.border = { top: {style:'thin'}, left: {style:'thin'}, bottom: {style:'thin'}, right: {style:'thin'} }; cell.alignment = { horizontal: 'center', vertical: 'middle' }; cell.font = { name: 'Calibri' }; if(colNumber === 1) { cell.font = { bold: true, name: 'Calibri' }; cell.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'F9F9F9' } }; } if (isOffArray[colNumber - 1]) { cell.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FF9999' } }; cell.font = { color: { argb: '9C0006' }, bold: true, name: 'Calibri' }; } }); }); worksheet.addRow([]); } workbook.xlsx.writeBuffer().then((buffer) => { const blob = new Blob([buffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' }); saveAs(blob, fileName); document.getElementById('exportModal').style.display='none'; }); }
 
         function openEmpModal(id) { const emp = employees.find(e => e.id === id); document.getElementById('modalName').innerText = emp.name; document.getElementById('modalImg').src = emp.photo || (emp.gender === 'male'? maleAvatar: femaleAvatar); let breakNames = []; const dayNames = ["السبت", "الأحد", "الاثنين", "الثلاثاء", "الأربعاء", "الخميس", "الجمعة"]; for(let i=0; i<7; i++) { if(isDayOff(emp.baseOffset, (currentWeekOffset * 7) + i)) breakNames.push(dayNames[i]); } document.getElementById('modalBreak').innerText = breakNames.join(" و "); document.getElementById('empModal').style.display = 'flex'; }
         function closeModal() { document.getElementById('empModal').style.display = 'none'; document.getElementById('scenarioModal').style.display = 'none'; document.getElementById('dareModal').style.display = 'none'; document.getElementById('winModal').style.display = 'none'; }
